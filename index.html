@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TikTok Shop — 玩具·潮玩·文具 内容电商看板</title>
+<script src="https://cdn.bootcdn.net/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+<script src="data.js"></script>
+<style>
+:root{--bg:#f1f5f9;--card:#fff;--p:#6366f1;--s:#10b981;--w:#f59e0b;--d:#ef4444;--t:#1e293b;--m:#64748b;--b:#e2e8f0;--r:10px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--t)}
+.hdr{background:linear-gradient(135deg,#0f172a,#1e293b);color:#fff;padding:16px 28px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.hdr h1{font-size:20px;font-weight:700}.hdr .sub{font-size:12px;opacity:.65}
+.badge{background:rgba(255,255,255,.12);padding:5px 12px;border-radius:16px;font-size:11px;cursor:pointer;border:none;color:#fff}
+.cat-on{background:rgba(99,102,241,.45)!important}
+.ctn{max-width:1420px;margin:0 auto;padding:16px 20px}
+.kpi-r{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:16px}
+.kpi{background:var(--card);padding:16px;border-radius:var(--r);box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.kpi .lbl{font-size:11px;color:var(--m);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px}
+.kpi .val{font-size:24px;font-weight:700}
+.kpi .chg{font-size:11px;margin-top:3px}.kpi .chg.up{color:var(--s)}.kpi .chg.dn{color:var(--d)}
+.sec{background:var(--card);border-radius:var(--r);padding:18px;margin-bottom:14px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.sec-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.sec-hd h2{font-size:15px;font-weight:600}.sec-hd span{font-size:11px;color:var(--m)}
+.flt-r{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.flt-r label{font-size:11px;color:var(--m);white-space:nowrap}
+.flt-r select,.flt-r input{padding:5px 8px;border:1px solid var(--b);border-radius:6px;font-size:12px;background:#fff;outline:none}
+.flt-r select:focus{border-color:var(--p)}
+.btn{padding:5px 12px;border:1px solid var(--b);border-radius:6px;background:#fff;font-size:12px;cursor:pointer}
+.btn:hover{background:#f8fafc}
+.cr2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.cbx{background:var(--card);border-radius:var(--r);padding:14px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.cbx h3{font-size:13px;font-weight:600;margin-bottom:2px}
+.cin{width:100%;height:340px}
+.rg{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.rtbl{width:100%;border-collapse:collapse;font-size:12px}
+.rtbl th{text-align:left;padding:6px 8px;border-bottom:2px solid var(--b);font-size:10px;color:var(--m);text-transform:uppercase}
+.rtbl td{padding:6px 8px;border-bottom:1px solid var(--b)}
+.rtbl tr:hover td{background:#f8fafc}
+.rn{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:4px;font-size:10px;font-weight:700}
+.rn.g{background:#fef3c7;color:#b45309}.rn.s{background:#f1f5f9;color:var(--m)}
+.tag{display:inline-block;padding:1px 6px;border-radius:3px;font-size:10px}
+.tag.us{background:#dbeafe;color:#1e40af}.tag.uk{background:#fce7f3;color:#9d174d}.tag.jp{background:#fef3c7;color:#92400e}.tag.kr{background:#e0e7ff;color:#3730a3}
+.tc{display:flex;justify-content:space-between;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.ts{ padding:6px 10px;border:1px solid var(--b);border-radius:6px;font-size:12px;width:240px;outline:none}
+.ts:focus{border-color:var(--p)}
+.dt{width:100%;border-collapse:collapse;font-size:12px}
+.dt th{text-align:left;padding:8px;background:#f8fafc;border-bottom:2px solid var(--b);font-size:10px;color:var(--m);cursor:pointer;white-space:nowrap}
+.dt th:hover{color:var(--p)}
+.dt td{padding:7px 8px;border-bottom:1px solid var(--b)}
+.dt tr:hover td{background:#f8fafc}
+.tw{max-height:340px;overflow-y:auto}
+.pg{display:flex;justify-content:center;align-items:center;gap:6px;margin-top:10px;font-size:12px}
+.pg button{padding:4px 10px;border:1px solid var(--b);border-radius:4px;background:#fff;cursor:pointer;font-size:12px}
+.pg button:disabled{opacity:.4;cursor:default}
+.ig{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.ins{padding:16px;border-radius:var(--r);border-left:3px solid}
+.ins.a{background:#fffbeb;border-color:#f59e0b}.ins.b{background:#eff6ff;border-color:#3b82f6}.ins.c{background:#f0fdf4;border-color:#10b981}
+.ins h4{font-size:13px;margin-bottom:4px}.ins p{font-size:12px;color:var(--m);line-height:1.6}
+.anno{font-size:11px;color:var(--m);line-height:1.5;margin-bottom:4px}
+.lk{color:var(--p);text-decoration:none}.lk:hover{text-decoration:underline}.lk::after{content:' ↗';font-size:9px;opacity:.5}
+@media(max-width:1200px){.kpi-r{grid-template-columns:repeat(3,1fr)}.cr2{grid-template-columns:1fr}.rg{grid-template-columns:1fr}.ig{grid-template-columns:1fr}}
+@media(max-width:768px){.kpi-r{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div>
+    <h1>🛍️ TikTok Shop — 玩具·潮玩·文具 内容电商看板</h1>
+    <div class="sub">内容曝光 → 互动 → 商品点击 → 下单转化 · 全链路数据监测</div>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+    <span style="font-size:11px;opacity:.6;">品类:</span>
+    <button class="badge cat-on" id="bt-toy" onclick="switchCat('Toys')">🧸 Toys 玩具</button>
+    <button class="badge" id="bt-col" onclick="switchCat('Collectibles')">🎴 Collectibles 潮玩</button>
+    <button class="badge" id="bt-sta" onclick="switchCat('Stationery')">✏️ Stationery 文具</button>
+    <button class="badge" id="bt-all" onclick="switchCat('all')">📦 全部</button>
+    <span style="margin:0 4px;">|</span>
+    <input type="file" id="fupload" accept=".json" style="display:none">
+    <span class="badge" id="datasrc" style="cursor:pointer;" title="点击导入JSON数据">📦 data.js</span>
+    <span class="badge">🕐 <span id="tnow">--</span></span>
+  </div>
+</div>
+
+<div class="ctn">
+  <div class="kpi-r" id="kpi-r"></div>
+
+  <div class="sec">
+    <div class="sec-hd"><h2>🔍 筛选条件</h2></div>
+    <div class="flt-r" id="flt-r"></div>
+  </div>
+
+  <div class="cr2">
+    <div class="cbx"><h3>📈 趋势分析 — 每日 GMV 与订单量</h3><div class="anno" id="an-t"></div><div class="cin" id="c-t"></div></div>
+    <div class="cbx"><h3>🔀 内容→类目 流向桑基图</h3><div class="anno" id="an-sk"></div><div class="cin" id="c-sk"></div></div>
+  </div>
+
+  <div class="cbx" style="margin-bottom:14px;"><h3>📊 内容类型贡献 — 各形式 GMV 占比</h3><div class="anno" id="an-st"></div><div class="cin" id="c-st"></div></div>
+
+  <div class="cbx" style="margin-bottom:14px;"><h3>📂 子类目 GMV 分布</h3><div class="anno" id="an-sc"></div><div class="cin" id="c-sc"></div></div>
+
+  <div class="sec">
+    <div class="sec-hd"><h2>🏆 Top 10 排行榜</h2></div>
+    <div class="rg" id="rank"></div>
+    <div class="anno" id="an-rk" style="margin-top:8px;"></div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-hd"><h2>📋 联动明细表</h2><span id="rc"></span></div>
+    <div class="tc">
+      <input class="ts" id="search" placeholder="🔍 搜索...">
+      <select id="psize" style="padding:5px 8px;border:1px solid var(--b);border-radius:6px;font-size:12px;">
+        <option value="10">10条/页</option><option value="20" selected>20条/页</option><option value="50">50条/页</option>
+      </select>
+    </div>
+    <div class="tw" id="tw"></div>
+    <div class="pg" id="pager"></div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-hd"><h2>💡 结论与建议</h2></div>
+    <div class="ig" id="insights"></div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// STATE
+// ============================================================
+var S={
+  f:{cat:'Toys',sub:'all',ct:'all',camp:'all',reg:'all',df:'2026-06-01',dt:'2026-07-11'},
+  sort:{k:null,d:'desc'},q:'',p:1,ps:20
+};
+
+// ============================================================
+// HELPERS
+// ============================================================
+function F(n){return n>=1e9?(n/1e9).toFixed(1)+'B':n>=1e6?(n/1e6).toFixed(1)+'M':n>=1e3?(n/1e3).toFixed(0)+'K':String(n)}
+function M(n){return'$'+F(n)}
+function P(n){return n.toFixed(2)+'%'}
+function an(id,t){var e=document.getElementById('an-'+id);if(e)e.textContent=t}
+var CN={
+  'Toys':'玩具','Stationery':'文具','Collectibles':'潮玩收藏',
+  'Classic Toys':'经典玩具','Games & Puzzles':'游戏拼图','Educational Toys':'益智玩具',
+  'Electronic/RC':'电动遥控','DIY Craft Toys':'手工玩具','Outdoor Toys':'户外玩具','Dolls & Plush':'娃娃毛绒',
+  'Writing Supplies':'书写用品','Paper & Notebooks':'本册纸品','Desk Accessories':'桌面配件',
+  'Art Supplies':'美术用品','Stationery Sets':'文具套装',
+  'Blind Boxes':'盲盒','Trading Cards':'集换卡牌','Collectible Figures':'收藏人偶','Entertainment Collectibles':'娱乐收藏',
+  'Short Video':'短视频','Livestream':'直播','Unboxing':'开箱','Tutorial':'教程','Review':'测评',
+  'Product Anchor':'商品锚点','Shop Window':'橱窗','Search':'搜索导流','Recommendation':'推荐算法',
+  'US':'美国','UK':'英国','JP':'日本','KR':'韩国'
+};
+function T(s){return CN[s]?s+' ('+CN[s]+')':s}
+function TC(s){return CN[s]||s}
+function LK(t,u,c){return u&&u!=='#'?'<a href="'+u+'" target="_blank" rel="noopener" class="lk '+(c||'')+'" title="新标签页打开">'+t+'</a>':t}
+function PU(p){return p?'https://www.tiktok.com/search?q='+encodeURIComponent(p.name)+'&tiktokshop=1':'#'}
+function CU(c){return c?'https://www.tiktok.com/search?q='+encodeURIComponent((c.title||'').split(' #')[0]):'#'}
+function AU(n){return n?'https://www.tiktok.com/@'+n.replace('@',''):'#'}
+function dB(a,b){return Math.round((new Date(b)-new Date(a))/86400000)}
+function dA(d,n){var x=new Date(d);x.setDate(x.getDate()+n);return x.toISOString().split('T')[0]}
+function srt(a,k,d){return a.slice().sort(function(x,y){var vx=x[k],vy=y[k];return d==='asc'?(vx>vy?1:-1):(vx<vy?-1:1)})}
+
+function mF(l){
+  var c=CONTENTS.find(function(x){return x.id===l.content_id});
+  var p=PRODUCTS.find(function(x){return x.id===l.product_id});
+  if(!c||!p)return false;
+  var f=S.f;
+  if(f.cat!=='all'&&p.category!==f.cat)return false;
+  if(f.sub!=='all'&&p.subcategory!==f.sub)return false;
+  if(f.ct!=='all'&&c.content_type!==f.ct)return false;
+  if(f.camp!=='all'&&l.campaign!==f.camp)return false;
+  if(f.reg!=='all'&&c.creator_region!==f.reg)return false;
+  if(f.df&&l.date<f.df)return false;
+  if(f.dt&&l.date>f.dt)return false;
+  return true;
+}
+function mFD(l){
+  var c=CONTENTS.find(function(x){return x.id===l.content_id});
+  var p=PRODUCTS.find(function(x){return x.id===l.product_id});
+  if(!c||!p)return false;
+  var f=S.f;
+  if(f.cat!=='all'&&p.category!==f.cat)return false;
+  if(f.sub!=='all'&&p.subcategory!==f.sub)return false;
+  if(f.ct!=='all'&&c.content_type!==f.ct)return false;
+  if(f.camp!=='all'&&l.campaign!==f.camp)return false;
+  if(f.reg!=='all'&&c.creator_region!==f.reg)return false;
+  return true;
+}
+function GF(){var a=LINKAGES.filter(mF);var q=S.q.toLowerCase();if(q){a=a.filter(function(l){var c=CONTENTS.find(function(x){return x.id===l.content_id});var p=PRODUCTS.find(function(x){return x.id===l.product_id});return(c&&c.title.toLowerCase().indexOf(q)!==-1)||(c&&c.creator.toLowerCase().indexOf(q)!==-1)||(p&&p.name.toLowerCase().indexOf(q)!==-1)||l.campaign.toLowerCase().indexOf(q)!==-1});}return a}
+
+// ============================================================
+// KPI
+// ============================================================
+function rKPI(){
+  var f=S.f,cs=f.df,ce=f.dt;
+  var dur=dB(cs,ce);
+  var ps=cs,pe=ce,pp=dA(ps,-1),pp2=dA(pp,-dur);
+  var full=LINKAGES.filter(mFD);
+  var cur=[],prev=[];
+  full.forEach(function(l){if(l.date>=cs&&l.date<=ce)cur.push(l);else if(l.date>=pp2&&l.date<=pp)prev.push(l);});
+  function sum(a,k){return a.reduce(function(s,l){return s+l[k];},0)}
+  var ci=sum(cur,'impressions'),cc=sum(cur,'product_clicks'),co=sum(cur,'orders'),cg=sum(cur,'gmv'),cst=sum(cur,'cost');
+  var pi=sum(prev,'impressions'),pc=sum(prev,'product_clicks'),po=sum(prev,'orders'),pg=sum(prev,'gmv'),pst=sum(prev,'cost');
+  var ctr=ci>0?cc/ci*100:0,ctrp=pi>0?pc/pi*100:0;
+  var cvr=cc>0?co/cc*100:0,cvrp=pc>0?po/pc*100:0;
+  var roi=cst>0?cg/cst:0,roip=pst>0?pg/pst:0;
+  var sku=new Set(cur.map(function(l){return l.product_id})).size;
+  var skup=new Set(prev.map(function(l){return l.product_id})).size;
+  function d(v,vp){if(vp===0||vp===undefined)return{t:'基线',c:'up'};var pct=(v-vp)/vp*100;return{t:(pct>=0?'▲':'▼')+' '+Math.abs(pct).toFixed(1)+'%',c:pct>=0?'up':'dn'}}
+  var di=d(ci,pi),dg=d(cg,pg),dct=d(ctr,ctrp),dcv=d(cvr,cvrp),dro=d(roi,roip),dsk=d(sku,skup);
+  var html='';
+  [{l:'总曝光量',v:F(ci),c:di.c,d:cs+'~'+ce+' | '+di.t},
+   {l:'总 GMV',v:M(cg),c:dg.c,d:F(co)+'笔 | '+dg.t},
+   {l:'点击率 CTR',v:P(ctr),c:dct.c,d:'参考2-5% | '+dct.t},
+   {l:'转化率 CVR',v:P(cvr),c:dcv.c,d:'点击→下单 | '+dcv.t},
+   {l:'投放 ROI',v:roi.toFixed(1)+'x',c:dro.c,d:'GMV/消耗 | '+dro.t},
+   {l:'关联商品数',v:sku,c:dsk.c,d:'独立SKU | '+dsk.t}]
+  .forEach(function(c){html+='<div class="kpi"><div class="lbl">'+c.l+'</div><div class="val">'+c.v+'</div><div class="chg '+c.c+'">'+c.d+'</div></div>';});
+  document.getElementById('kpi-r').innerHTML=html;
+}
+
+// ============================================================
+// FILTERS
+// ============================================================
+function rFLT(){
+  var f=S.f;
+  var cats=['all','Toys','Collectibles','Stationery'];
+  // 所有下拉选项只看日期范围内的
+  var linksInRange=LINKAGES.filter(function(l){return (!f.df||l.date>=f.df)&&(!f.dt||l.date<=f.dt);});
+  var pidsInRange=Array.from(new Set(linksInRange.map(function(l){return l.product_id;})));
+  var cids=Array.from(new Set(linksInRange.map(function(l){return l.content_id;})));
+  var scats=PRODUCTS.filter(function(p){return (f.cat==='all'||p.category===f.cat)&&pidsInRange.indexOf(p.id)!==-1;}).map(function(p){return p.subcategory;});
+  var sc=['all'].concat(Array.from(new Set(scats)).sort());
+  if(sc.indexOf(f.sub)===-1)f.sub='all';
+  var cts=['all'].concat(Array.from(new Set(CONTENTS.filter(function(c){return cids.indexOf(c.id)!==-1;}).map(function(c){return c.content_type;}))));
+  var camps=['all'].concat(Array.from(new Set(linksInRange.map(function(l){return l.campaign;}))).sort());
+  var regs=['all'].concat(Array.from(new Set(CONTENTS.filter(function(c){return cids.indexOf(c.id)!==-1;}).map(function(c){return c.creator_region;}))));
+  function sel(k,o,l){return'<label>'+l+'</label><select id="f-'+k+'">'+o.map(function(x){return'<option value="'+x+'"'+(f[k]===x?' selected':'')+'>'+(x==='all'?'全部':T(x))+'</option>';}).join('')+'</select>'}
+  document.getElementById('flt-r').innerHTML=
+    sel('cat',cats,'大类')+sel('sub',sc,'子类目')+sel('ct',cts,'内容类型')+sel('camp',camps,'活动')+sel('reg',regs,'地区')+
+    '<label>从</label><input type="date" id="f-df" value="'+f.df+'"><label>至</label><input type="date" id="f-dt" value="'+f.dt+'">'+
+    '<button class="btn" id="btn-rst">🔄 重置</button>';
+  ['cat','sub','ct','camp','reg'].forEach(function(k){document.getElementById('f-'+k).onchange=function(){S.f[k]=this.value;if(k==='cat')S.f.sub='all';S.p=1;refresh();};});
+  document.getElementById('f-df').onchange=function(){S.f.df=this.value;S.p=1;refresh();};
+  document.getElementById('f-dt').onchange=function(){S.f.dt=this.value;S.p=1;refresh();};
+  document.getElementById('btn-rst').onclick=function(){S.f={cat:'Toys',sub:'all',ct:'all',camp:'all',reg:'all',df:S.f.df,dt:S.f.dt};S.q='';document.getElementById('search').value='';S.p=1;refresh();};
+}
+
+// ============================================================
+// CHARTS
+// ============================================================
+var CH=[];
+
+function rTrend(){
+  var a=GF(),by={};
+  a.forEach(function(l){if(!by[l.date])by[l.date]={g:0,o:0};by[l.date].g+=l.gmv;by[l.date].o+=l.orders;});
+  var ds=Object.keys(by).sort();
+  var c=echarts.init(document.getElementById('c-t'));
+  c.setOption({tooltip:{trigger:'axis'},legend:{data:['GMV','订单量'],bottom:0},grid:{left:55,right:15,top:10,bottom:35},
+    xAxis:{type:'category',data:ds,axisLabel:{fontSize:10,rotate:45,formatter:function(v){return v.slice(5)}}},
+    yAxis:[{type:'value',axisLabel:{fontSize:10,formatter:M}},{type:'value',axisLabel:{fontSize:10,formatter:F}}],
+    series:[{name:'GMV',type:'line',data:ds.map(function(d){return by[d].g}),smooth:true,lineStyle:{color:'#6366f1',width:2},itemStyle:{color:'#6366f1'},symbol:'none'},
+            {name:'订单量',type:'line',yAxisIndex:1,data:ds.map(function(d){return by[d].o}),smooth:true,lineStyle:{color:'#10b981',width:2},itemStyle:{color:'#10b981'},symbol:'none'}]});
+  var tg=ds.reduce(function(s,d){return s+by[d].g},0);
+  var pk=ds.reduce(function(a,b){return by[b].g>by[a].g?b:a},ds[0]);
+  an('t',ds.length+'天 | 日均GMV '+M(tg/ds.length)+' | 峰值 '+pk+'（'+M(by[pk].g)+'）');
+  CH.push(c);
+}
+
+function rSankey(){
+  var a=GF(),flows={};
+  a.forEach(function(l){var c=CONTENTS.find(function(x){return x.id===l.content_id});var p=PRODUCTS.find(function(x){return x.id===l.product_id});if(!c||!p)return;var k=c.content_type+'|'+p.category;if(!flows[k])flows[k]=0;flows[k]+=l.gmv;});
+  var nodes=[],seen={},links=[];
+  Object.entries(flows).forEach(function(e){var p=e[0].split('|');if(!seen[p[0]]){seen[p[0]]=1;nodes.push({name:T(p[0])});}if(!seen[p[1]]){seen[p[1]]=1;nodes.push({name:T(p[1])});}links.push({source:T(p[0]),target:T(p[1]),value:Math.round(e[1])});});
+  var c=echarts.init(document.getElementById('c-sk'));
+  c.setOption({tooltip:{trigger:'item',formatter:function(p){return p.dataType==='edge'?p.data.source+' → '+p.data.target+'<br/>GMV: '+M(p.data.value):p.name;}},series:[{type:'sankey',layout:'none',emphasis:{focus:'adjacency'},nodeAlign:'left',data:nodes,links:links,label:{fontSize:11},lineStyle:{color:'gradient',curveness:.5}}]});
+  var tf=links.sort(function(a,b){return b.value-a.value})[0];
+  an('sk',tf?'最大流向：'+tf.source+' → '+tf.target+'（'+M(tf.value)+'）':'暂无');
+  CH.push(c);
+}
+
+function rStack(){
+  var a=GF(),types=[],by={};
+  a.forEach(function(l){var c=CONTENTS.find(function(x){return x.id===l.content_id});if(!c)return;if(types.indexOf(c.content_type)===-1){types.push(c.content_type);by[c.content_type]={};}});
+  var ad=new Set();
+  a.forEach(function(l){var c=CONTENTS.find(function(x){return x.id===l.content_id});if(!c)return;if(!by[c.content_type][l.date])by[c.content_type][l.date]=0;by[c.content_type][l.date]+=l.gmv;ad.add(l.date);});
+  var ds=Array.from(ad).sort();
+  var cs=['#6366f1','#3b82f6','#10b981','#f59e0b','#ef4444','#8b5cf6','#ec4899','#14b8a6'];
+  var c=echarts.init(document.getElementById('c-st'));
+  c.setOption({tooltip:{trigger:'axis',valueFormatter:function(v){return M(v);}},legend:{data:types.map(function(x){return T(x)}),bottom:0},grid:{left:55,right:15,top:10,bottom:35},xAxis:{type:'category',data:ds,axisLabel:{fontSize:10,rotate:45,formatter:function(v){return v.slice(5)}}},yAxis:{type:'value',axisLabel:{fontSize:10,formatter:M}},series:types.map(function(t,i){return{name:T(t),type:'bar',stack:'x',data:ds.map(function(d){return by[t][d]||0}),itemStyle:{color:cs[i]},emphasis:{focus:'series'}};})});
+  var tot={};types.forEach(function(t){tot[t]=ds.reduce(function(s,d){return s+(by[t][d]||0)},0);});
+  var top=types.reduce(function(a,b){return tot[a]>tot[b]?a:b},types[0]);
+  var all=Object.values(tot).reduce(function(s,v){return s+v},0);
+  an('st','贡献最大：'+T(top)+'（'+M(tot[top])+'），占'+(all>0?(tot[top]/all*100).toFixed(0):0)+'%');
+  CH.push(c);
+}
+
+function rSubcat(){
+  var a=GF(),by={};
+  a.forEach(function(l){var p=PRODUCTS.find(function(x){return x.id===l.product_id});if(!p||!p.subcategory)return;if(!by[p.subcategory])by[p.subcategory]={g:0,o:0,u:new Set()};by[p.subcategory].g+=l.gmv;by[p.subcategory].o+=l.orders;by[p.subcategory].u.add(l.product_id);});
+  var it=Object.entries(by).map(function(e){return{n:T(e[0]),g:e[1].g,o:e[1].o,sku:e[1].u.size};}).sort(function(a,b){return b.g-a.g;});
+  var c=echarts.init(document.getElementById('c-sc'));
+  c.setOption({tooltip:{trigger:'axis',formatter:function(p){var x=it[it.length-1-p[0].dataIndex];return x.n+'<br/>GMV: '+M(x.g)+'<br/>订单: '+F(x.o)+'<br/>SKU: '+x.sku;}},grid:{left:160,right:20,top:10,bottom:25},xAxis:{type:'value',axisLabel:{fontSize:10,formatter:M}},yAxis:{type:'category',data:it.map(function(x){return x.n}).reverse(),axisLabel:{fontSize:11},inverse:true},series:[{type:'bar',data:it.map(function(x){return x.g}).reverse(),itemStyle:{color:function(p){var cs2=['#6366f1','#818cf8','#a5b4fc','#c7d2fe','#e0e7ff'];return cs2[Math.min(p.dataIndex,4)];}},label:{show:true,position:'right',fontSize:10,formatter:function(p){return M(p.value);}}}]});
+  var t3=it.slice(0,3).reduce(function(s,x){return s+x.g},0),ag=it.reduce(function(s,x){return s+x.g},0);
+  an('sc','Top3子类目贡献'+(ag>0?(t3/ag*100).toFixed(0):0)+'% GMV | '+it.length+'个子类目有动销');
+  CH.push(c);
+}
+
+// ============================================================
+// RANKINGS
+// ============================================================
+function rRank(){
+  var a=GF(),pG={},cI={},aD={};
+  a.forEach(function(l){
+    if(!pG[l.product_id])pG[l.product_id]=0;pG[l.product_id]+=l.gmv;
+    if(!cI[l.content_id])cI[l.content_id]=0;cI[l.content_id]+=l.impressions;
+    var cc=CONTENTS.find(function(x){return x.id===l.content_id});if(cc){if(!aD[cc.creator])aD[cc.creator]={g:0,r:cc.creator_region};aD[cc.creator].g+=l.gmv;}
+  });
+  var tP=Object.entries(pG).map(function(e){var p=PRODUCTS.find(function(x){return x.id===e[0]});return p?{n:p.name,sc:p.subcategory,g:e[1]}:null;}).filter(Boolean).sort(function(a,b){return b.g-a.g;}).slice(0,10);
+  var tC=Object.entries(cI).map(function(e){var c=CONTENTS.find(function(x){return x.id===e[0]});return c?{t:c.title,ct:c.content_type,i:e[1]}:null;}).filter(Boolean).sort(function(a,b){return b.i-a.i;}).slice(0,10);
+  var tA=Object.entries(aD).map(function(e){return{n:e[0],g:e[1].g,r:e[1].r};}).sort(function(a,b){return b.g-a.g;}).slice(0,10);
+  function rn(i){return'<span class="rn '+(i<3?'g':'s')+'">'+(i+1)+'</span>';}
+  document.getElementById('rank').innerHTML=
+    '<div><h4 style="font-size:12px;color:var(--m);margin-bottom:6px;">🔥 商品GMV排行</h4><table class="rtbl"><thead><tr><th>#</th><th>商品</th><th>子类目</th><th>GMV</th></tr></thead><tbody>'+
+    tP.map(function(p,i){return'<tr><td>'+rn(i)+'</td><td>'+LK(p.n,PU({name:p.n}),'')+'</td><td><span style="font-size:10px;background:#f1f5f9;padding:2px 6px;border-radius:4px;">'+TC(p.sc)+'</span></td><td style="font-weight:600;">'+M(p.g)+'</td></tr>';}).join('')+'</tbody></table></div>'+
+    '<div><h4 style="font-size:12px;color:var(--m);margin-bottom:6px;">📹 内容曝光排行</h4><table class="rtbl"><thead><tr><th>#</th><th>标题</th><th>类型</th><th>曝光量</th></tr></thead><tbody>'+
+    tC.map(function(c,i){return'<tr><td>'+rn(i)+'</td><td style="max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+LK(c.t,CU({title:c.t}),'')+'</td><td>'+TC(c.ct)+'</td><td>'+F(c.i)+'</td></tr>';}).join('')+'</tbody></table></div>'+
+    '<div><h4 style="font-size:12px;color:var(--m);margin-bottom:6px;">👤 创作者带货排行</h4><table class="rtbl"><thead><tr><th>#</th><th>创作者</th><th>地区</th><th>GMV</th></tr></thead><tbody>'+
+    tA.map(function(a,i){var cls=a.r==='US'?'us':a.r==='UK'?'uk':a.r==='JP'?'jp':'kr';return'<tr><td>'+rn(i)+'</td><td>'+LK(a.n,AU(a.n),'')+'</td><td><span class="tag '+cls+'">'+a.r+'</span></td><td style="font-weight:600;">'+M(a.g)+'</td></tr>';}).join('')+'</tbody></table></div>';
+  var tp1=tP[0]?tP[0].g/tP.reduce(function(s,p){return s+p.g},0)*100:0;
+  var ta1=tA[0]?tA[0].g/tA.reduce(function(s,a){return s+a.g},0)*100:0;
+  an('rk','💡 Top1商品贡献'+tp1.toFixed(0)+'% GMV | Top1创作者贡献'+ta1.toFixed(0)+'% GMV');
+}
+
+// ============================================================
+// TABLE
+// ============================================================
+function rTbl(){
+  var a=GF();if(S.sort.k)a=srt(a,S.sort.k,S.sort.d);
+  var tot=a.length,pgs=Math.ceil(tot/S.ps);if(S.p>pgs)S.p=Math.max(1,pgs);
+  var st=(S.p-1)*S.ps,rows=a.slice(st,st+S.ps);
+  var ag=tot>0?a.reduce(function(s,l){return s+l.gmv},0)/tot:0;
+  document.getElementById('rc').textContent=tot+'条 | 均GMV '+M(ag)+' | '+(st+1)+'-'+Math.min(st+S.ps,tot);
+  function th(k,l){return'<th data-s="'+k+'">'+l+(S.sort.k===k?(S.sort.d==='asc'?' ▲':' ▼'):'')+'</th>';}
+  document.getElementById('tw').innerHTML='<table class="dt"><thead><tr>'+
+    th('content_id','内容')+th('product_id','商品')+'<th>类型</th>'+th('impressions','曝光量')+th('product_clicks','点击量')+th('orders','订单量')+th('gmv','GMV')+th('roi','ROI')+'<th>活动</th><th>日期</th>'+
+    '</tr></thead><tbody>'+rows.map(function(l){
+      var c=CONTENTS.find(function(x){return x.id===l.content_id}),p=PRODUCTS.find(function(x){return x.id===l.product_id});
+      return'<tr><td style="max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="'+(c?c.title:'')+'">'+LK(c?c.title:l.content_id,CU(c),'')+'</td>'+
+        '<td>'+LK(p?p.name:l.product_id,PU(p),'')+'</td><td>'+TC(l.linkage_type)+'</td>'+
+        '<td>'+F(l.impressions)+'</td><td>'+F(l.product_clicks)+'</td><td>'+F(l.orders)+'</td>'+
+        '<td style="font-weight:600;">'+M(l.gmv)+'</td><td>'+(l.roi>=0?l.roi.toFixed(1)+'x':'N/A')+'</td>'+
+        '<td>'+TC(l.campaign)+'</td><td style="font-size:11px;">'+l.date+'</td></tr>';
+    }).join('')+'</tbody></table>';
+  document.getElementById('pager').innerHTML='<button '+(S.p<=1?'disabled':'')+' id="bp">‹ 上一页</button><span>第'+S.p+'/'+(pgs||1)+'页</span><button '+(S.p>=pgs||pgs===0?'disabled':'')+' id="bn">下一页 ›</button>';
+  document.querySelectorAll('.dt th[data-s]').forEach(function(th){th.onclick=function(){var k=th.dataset.s;S.sort.k=k;S.sort.d=S.sort.k===k&&S.sort.d==='asc'?'desc':'asc';S.p=1;rTbl();};});
+  var bp=document.getElementById('bp'),bn=document.getElementById('bn');
+  if(bp)bp.onclick=function(){S.p--;rTbl();};if(bn)bn.onclick=function(){S.p++;rTbl();};
+}
+
+// ============================================================
+// INSIGHTS
+// ============================================================
+function rIns(){
+  var a=GF(),f=S.f;if(a.length===0){document.getElementById('insights').innerHTML='<div class="ins a"><h4>📭 无数据</h4><p>当前筛选条件下没有匹配记录。</p></div>';return;}
+  var bySub={};a.forEach(function(l){var p=PRODUCTS.find(function(x){return x.id===l.product_id});if(p&&p.subcategory){if(!bySub[p.subcategory])bySub[p.subcategory]={g:0,o:0};bySub[p.subcategory].g+=l.gmv;bySub[p.subcategory].o+=l.orders;}});
+  var sbs=Object.entries(bySub).sort(function(a,b){return b[1].g-a[1].g;}),bs=sbs[0],b2=sbs[1];
+  var byCt={};a.forEach(function(l){var c=CONTENTS.find(function(x){return x.id===l.content_id});if(c){if(!byCt[c.content_type])byCt[c.content_type]={g:0,o:0,cst:0};byCt[c.content_type].g+=l.gmv;byCt[c.content_type].o+=l.orders;byCt[c.content_type].cst+=l.cost;}});
+  var cts=Object.entries(byCt).sort(function(a,b){return b[1].g-a[1].g;}),bt=cts[0];
+  var byDt={};a.forEach(function(l){if(!byDt[l.date])byDt[l.date]=0;byDt[l.date]+=l.gmv;});
+  var dts=Object.entries(byDt).sort(function(a,b){return a[0].localeCompare(b[0]);});
+  var avg=dts.reduce(function(s,d){return s+d[1];},0)/Math.max(dts.length,1),mv=0,vd='';
+  for(var i=1;i<dts.length;i++){var ch=Math.abs(dts[i][1]-dts[i-1][1])/Math.max(1,dts[i-1][1])*100;if(ch>mv&&dts[i][1]>avg*2){mv=ch;vd=dts[i][0];}}
+  var totalG=a.reduce(function(s,l){return s+l.gmv},0);
+  var bsShare=bs?bs[1].g/totalG*100:0;
+  var btr=(bt&&bt[1].cst>0)?(bt[1].g/bt[1].cst).toFixed(1):0;
+  var scope=f.cat!=='all'?TC(f.cat)+'品类':'全品类';if(f.sub!=='all')scope=TC(f.sub)+'（'+TC(f.cat)+'）';
+  var a1='在<strong>'+scope+'</strong>范围内，';
+  if(bs){a1+='<strong>'+TC(bs[0])+'</strong>以<strong>'+M(bs[1].g)+'</strong>GMV居首（占'+bsShare.toFixed(0)+'%）';if(b2)a1+='，其次'+TC(b2[0])+'（'+M(b2[1].g)+'）';a1+='。';}
+  if(bt){a1+='内容形式中<strong>'+TC(bt[0])+'</strong>带货最突出（'+M(bt[1].g)+'GMV';if(btr>0)a1+'，ROI '+btr+'x';a1+='）。';}
+  var b1=vd?'<strong>'+vd+'</strong>出现异常峰值（GMV <strong>'+M(byDt[vd])+'</strong>），较前日波动<strong>'+mv.toFixed(0)+'%</strong>。':'所选时段内GMV走势平稳，日均约<strong>'+M(avg)+'</strong>。';
+  var c1='① ';if(bt){c1+=bt[1].cst>0?'投放优先<strong>'+TC(bt[0])+'</strong>（ROI '+btr+'x），':'加大<strong>'+TC(bt[0])+'</strong>内容产出，';}if(bs)c1+='重点推广<strong>'+TC(bs[0])+'</strong>子类目。';
+  var tg=totalG,tc=a.reduce(function(s,l){return s+l.cost},0),ro=(tc>0?tg/tc:0);c1+=' ② 整体ROI <strong>'+ro.toFixed(1)+'x</strong>，关注加购→成交流失。③ ';
+  c1+=f.cat!=='all'?'建议对比其他品类同期数据。':'三个品类差异大，建议拆开分析。';
+  document.getElementById('insights').innerHTML=
+    '<div class="ins a"><h4>🏅 '+scope+' 结构分析</h4><p>'+a1+'</p></div>'+
+    '<div class="ins b"><h4>📉 '+scope+' 波动监测</h4><p>'+b1+'</p></div>'+
+    '<div class="ins c"><h4>💡 '+scope+' 行动建议</h4><p>'+c1+'</p></div>';
+}
+
+// ============================================================
+// LIFECYCLE
+// ============================================================
+function refresh(){
+  CH.forEach(function(c){try{c.dispose()}catch(e){}});CH=[];
+  rKPI();rFLT();rTrend();rSankey();rStack();rSubcat();rRank();rTbl();rIns();
+}
+
+window.switchCat=function(cat){S.f.cat=cat;S.f.sub='all';['toy','col','sta','all'].forEach(function(k){var e=document.getElementById('bt-'+k);if(e)e.className='badge'+(k===(cat==='Toys'?'toy':cat==='Collectibles'?'col':cat==='Stationery'?'sta':'all')?' cat-on':'');});S.p=1;refresh();};
+
+function init(){
+  document.getElementById('tnow').textContent=new Date().toLocaleString();
+  document.getElementById('bt-toy').className='badge cat-on';
+  document.getElementById('search').oninput=function(){S.q=this.value;S.p=1;rTbl();};
+  document.getElementById('psize').onchange=function(){S.ps=parseInt(this.value);S.p=1;rTbl();};
+  document.getElementById('datasrc').onclick=function(){document.getElementById('fupload').click();};
+  document.getElementById('fupload').onchange=function(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(ev){try{var d=JSON.parse(ev.target.result);if(d.products)PRODUCTS=d.products;if(d.contents)CONTENTS=d.contents;if(d.linkages)LINKAGES=d.linkages;document.getElementById('datasrc').textContent='📂 '+f.name;refresh();}catch(err){alert('JSON错误: '+err.message);}};r.readAsText(f);};
+  window.onresize=function(){CH.forEach(function(c){try{c.resize()}catch(e){}});};
+  refresh();
+}
+
+if(typeof echarts!=='undefined'&&typeof PRODUCTS!=='undefined'){init();}else{window.onload=function(){setTimeout(function(){if(typeof echarts!=='undefined'&&typeof PRODUCTS!=='undefined')init();},500);};}
+</script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+*.bak
+*.csv
+*.xlsx
+debug.html
+test.html
+step2.html
+convert.py
+convert_fb.py
+generate_tiktok_data.py
+index_standalone.html
+data.json
+__pycache__
+.DS_Store
