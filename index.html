@@ -137,7 +137,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Micr
 // STATE
 // ============================================================
 var S={
-  f:{cat:'Toys',sub:'all',ct:'all',camp:'all',reg:'all',df:'2026-06-01',dt:'2026-07-11'},
+  f:{cat:'Toys',sub:'all',ct:'all',camp:'all',reg:'all',df:'',dt:''},
   sort:{k:null,d:'desc'},q:'',p:1,ps:20
 };
 
@@ -174,6 +174,9 @@ function mF(l){
   var p=PRODUCTS.find(function(x){return x.id===l.product_id});
   if(!c||!p)return false;
   var f=S.f;
+  // 屏蔽未来数据
+  var today=new Date().toISOString().split('T')[0];
+  if(l.date>today)return false;
   if(f.cat!=='all'&&p.category!==f.cat)return false;
   if(f.sub!=='all'&&p.subcategory!==f.sub)return false;
   if(f.ct!=='all'&&c.content_type!==f.ct)return false;
@@ -187,6 +190,8 @@ function mFD(l){
   var c=CONTENTS.find(function(x){return x.id===l.content_id});
   var p=PRODUCTS.find(function(x){return x.id===l.product_id});
   if(!c||!p)return false;
+  var today=new Date().toISOString().split('T')[0];
+  if(l.date>today)return false;
   var f=S.f;
   if(f.cat!=='all'&&p.category!==f.cat)return false;
   if(f.sub!=='all'&&p.subcategory!==f.sub)return false;
@@ -252,7 +257,7 @@ function rFLT(){
   ['cat','sub','ct','camp','reg'].forEach(function(k){document.getElementById('f-'+k).onchange=function(){S.f[k]=this.value;if(k==='cat')S.f.sub='all';S.p=1;refresh();};});
   document.getElementById('f-df').onchange=function(){S.f.df=this.value;S.p=1;refresh();};
   document.getElementById('f-dt').onchange=function(){S.f.dt=this.value;S.p=1;refresh();};
-  document.getElementById('btn-rst').onclick=function(){S.f={cat:'Toys',sub:'all',ct:'all',camp:'all',reg:'all',df:S.f.df,dt:S.f.dt};S.q='';document.getElementById('search').value='';S.p=1;refresh();};
+  document.getElementById('btn-rst').onclick=function(){var now=new Date(),today=now.toISOString().split('T')[0];var ago=new Date(now.getTime()-30*86400000).toISOString().split('T')[0];S.f={cat:'Toys',sub:'all',ct:'all',camp:'all',reg:'all',df:ago,dt:today};S.q='';document.getElementById('search').value='';S.p=1;refresh();};
 }
 
 // ============================================================
@@ -409,6 +414,10 @@ window.switchCat=function(cat){S.f.cat=cat;S.f.sub='all';['toy','col','sta','all
 
 function init(){
   document.getElementById('tnow').textContent=new Date().toLocaleString();
+  // 默认显示最近30天（截止今天）
+  var now=new Date(), today=now.toISOString().split('T')[0];
+  var ago=new Date(now.getTime()-30*86400000).toISOString().split('T')[0];
+  S.f.df=ago; S.f.dt=today;
   document.getElementById('bt-toy').className='badge cat-on';
   document.getElementById('search').oninput=function(){S.q=this.value;S.p=1;rTbl();};
   document.getElementById('psize').onchange=function(){S.ps=parseInt(this.value);S.p=1;rTbl();};
