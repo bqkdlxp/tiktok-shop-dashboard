@@ -303,8 +303,8 @@ function rTrend(){
   c.setOption({tooltip:{trigger:'axis'},legend:{data:['GMV','订单量'],bottom:0},grid:{left:85,right:35,top:15,bottom:35},
     xAxis:{type:'category',data:ds,axisLabel:{fontSize:10,rotate:45,formatter:function(v){return v.slice(5)}}},
     yAxis:[{type:'value',axisLabel:{fontSize:9,formatter:M}},{type:'value',axisLabel:{fontSize:10,formatter:F}}],
-    series:[{name:'GMV',type:'line',data:ds.map(function(d){return by[d].g}),smooth:true,lineStyle:{color:'#6366f1',width:2},itemStyle:{color:'#6366f1'},symbol:'circle',symbolSize:5},
-            {name:'订单量',type:'line',yAxisIndex:1,data:ds.map(function(d){return by[d].o}),smooth:true,lineStyle:{color:'#10b981',width:2},itemStyle:{color:'#10b981'},symbol:'circle',symbolSize:5}]});c.on('click',function(p){if(p.componentType==='series')decompDay(p.name);});
+    series:[{name:'GMV',type:'line',data:ds.map(function(d){return by[d].g}),smooth:true,lineStyle:{color:'#6366f1',width:2},itemStyle:{color:'#6366f1'},symbol:'none'},
+            {name:'订单量',type:'line',yAxisIndex:1,data:ds.map(function(d){return by[d].o}),smooth:true,lineStyle:{color:'#10b981',width:2},itemStyle:{color:'#10b981'},symbol:'none'}]});c.on('click',function(p){if(p.componentType==='series')decompDay(p.name);});
   var tg=ds.reduce(function(s,d){return s+by[d].g},0);
   var pk=ds.reduce(function(a,b){return by[b].g>by[a].g?b:a},ds[0]);
   an('t',ds.length+'天 | 日均GMV '+M(tg/ds.length)+' | 峰值 '+pk+'（'+M(by[pk].g)+'）');
@@ -464,7 +464,7 @@ function decompDay(dateStr){
   var tg2=a2?a2.reduce(function(s,l){return s+l.gmv;},0):0;
   var chg=tg2>0?' (对比'+cmp+': '+((tg1-tg2)/tg2*100).toFixed(1)+'%)':'';
   document.getElementById('decomp-date').textContent=_decompDate+' | GMV: '+M(tg1)+' | 订单: '+F(to1)+chg;
-  function tb(arr,lb){var m={},tg=arr.reduce(function(s,l){return s+l.gmv;},0);arr.forEach(function(l){var k=arguments[2]?arguments[2](l):l.campaign;if(!m[k])m[k]={g1:0};m[k].g1+=l.gmv;});if(a2){a2.forEach(function(l){var k=arguments[2]?arguments[2](l):l.campaign;if(!m[k])m[k]={g1:0,g2:0};m[k].g2=(m[k].g2||0)+l.gmv;});}
+  function tb(arr,lb,kf){var m={},tg=arr.reduce(function(s,l){return s+l.gmv;},0);arr.forEach(function(l){var k=kf?kf(l):l.campaign;if(!m[k])m[k]={g1:0};m[k].g1+=l.gmv;});if(a2){a2.forEach(function(l){var k=kf?kf(l):l.campaign;if(!m[k])m[k]={g1:0,g2:0};m[k].g2=(m[k].g2||0)+l.gmv;});}
     var it=Object.entries(m).sort(function(a,b){return b[1].g1-a[1].g1;});
     var hd='<tr><th>'+lb+'</th><th>GMV</th><th>%</th>';
     if(a2)hd+='<th>对比GMV</th><th>变化</th>';
