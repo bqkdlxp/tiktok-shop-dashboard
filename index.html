@@ -422,7 +422,10 @@ function refresh(){
 }
 
 function toggleSec(btn){var sec=btn.closest(".sec")||btn.closest(".cbx");if(!sec)return;var hidden=false,first=true;for(var i=0;i<sec.children.length;i++){var c=sec.children[i];if(c===btn.parentElement||c.classList.contains("sec-hd")||c===btn)continue;if(first){hidden=c.style.display==="none";first=false;}c.style.display=hidden?"":"none";}btn.textContent=hidden?"▼":"▶";}
-window.switchCat=function(cat){S.f.cat=cat;S.f.sub='all';['toy','col','sta','all'].forEach(function(k){var e=document.getElementById('bt-'+k);if(e)e.className='badge'+(k===(cat==='Toys'?'toy':cat==='Collectibles'?'col':cat==='Stationery'?'sta':'all')?' cat-on':'');});S.p=1;refresh();};
+window.switchCat=function(cat){S.f.cat=cat;S.f.sub='all';
+  var target=cat==='Toys'?'toy':cat==='Collectibles'?'col':cat==='Stationery'?'sta':'all';
+  ['toy','col','sta','all'].forEach(function(k){var e=document.getElementById('bt-'+k);if(e)e.className='badge'+(k===target?' cat-on':'');});
+  S.p=1;refresh();};
 
 function init(){
   document.getElementById('tnow').textContent=new Date().toLocaleString();
