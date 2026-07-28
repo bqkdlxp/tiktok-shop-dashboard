@@ -497,7 +497,7 @@ function toggleSec(btn){
     var c=sec.children[i];
     if(c===btn.parentElement||c.classList.contains("sec-hd")||c===btn)continue;
     if(first){hidden=c.style.display!=="none";first=false;}
-    c.style.display=hidden?"none":"";
+    c.style.display=hidden?"none":(c.tagName==='DIV'&&c.style.cssText.indexOf('grid')>=0?'grid':'');
   }
   btn.textContent=hidden?"▼":"▶";
   // 展开后触发一次resize让图表重新计算尺寸
