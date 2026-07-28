@@ -492,15 +492,16 @@ function decompDay(dateStr){
 
 function toggleSec(btn){
   var sec=btn.closest(".sec")||btn.closest(".cbx");if(!sec)return;
-  var hidden=false;
+  var hidden=false,first=true;
   for(var i=0;i<sec.children.length;i++){
     var c=sec.children[i];
     if(c===btn.parentElement||c.classList.contains("sec-hd")||c===btn)continue;
-    if(hidden===false){hidden=c.style.maxHeight==="0px";}
-    if(hidden){c.setAttribute("data-prev-height",c.style.maxHeight||"");c.style.maxHeight="0px";c.style.overflow="hidden";c.style.opacity="0";}
-    else{var ph=c.getAttribute("data-prev-height")||"none";c.style.maxHeight=ph==="none"?"2000px":ph;c.style.overflow="";c.style.opacity="1";}
+    if(first){hidden=c.style.display!=="none";first=false;}
+    c.style.display=hidden?"none":"";
   }
   btn.textContent=hidden?"▼":"▶";
+  // 展开后触发一次resize让图表重新计算尺寸
+  if(!hidden){setTimeout(function(){var evt=new Event('resize');window.dispatchEvent(evt);},100);}
 }
 window.switchCat=function(cat){S.f.cat=cat;S.f.sub='all';
   var target=cat==='Toys'?'toy':cat==='Collectibles'?'col':cat==='Stationery'?'sta':'all';
