@@ -464,6 +464,15 @@ function decompDay(dateStr){
   var tg2=a2?a2.reduce(function(s,l){return s+l.gmv;},0):0;
   var chg=tg2>0?' (对比'+cmp+': '+((tg1-tg2)/tg2*100).toFixed(1)+'%)':'';
   document.getElementById('decomp-date').textContent=_decompDate+' | GMV: '+M(tg1)+' | 订单: '+F(to1)+chg;
+// 一句话总结
+var topCT=a1.reduce(function(m,l){var c=l.content_id?CONTENTS.find(function(x){return x.id===l.content_id}):null;var t=c?c.content_type:'自然流量';m[t]=(m[t]||0)+l.gmv;return m;},{});
+var bestCT=Object.keys(topCT).sort(function(a,b){return topCT[b]-topCT[a];})[0];
+var topCR=a1.reduce(function(m,l){var c=l.content_id?CONTENTS.find(function(x){return x.id===l.content_id}):null;var t=c?c.creator:'自然流量';m[t]=(m[t]||0)+l.gmv;return m;},{});
+var bestCR=Object.keys(topCR).sort(function(a,b){return topCR[b]-topCR[a];})[0];
+var avgG=ds.reduce(function(s,d){return s+bt[d].g;},0)/ds.length;
+var devPct=((bt[_decompDate].g-avgG)/avgG*100).toFixed(0);
+var tag=devPct>50?'🔥 异常高峰':devPct>20?'📈 显著偏高':devPct<-30?'📉 异常低谷':'✅ 正常范围';
+document.getElementById('decomp-date').textContent+=' | '+tag+' | 主因: '+TC(bestCT)+' + '+TC(bestCR);
   function tb(arr,lb,kf){var m={},tg=arr.reduce(function(s,l){return s+l.gmv;},0);arr.forEach(function(l){var k=kf?kf(l):l.campaign;if(!m[k])m[k]={g1:0};m[k].g1+=l.gmv;});if(a2){a2.forEach(function(l){var k=kf?kf(l):l.campaign;if(!m[k])m[k]={g1:0,g2:0};m[k].g2=(m[k].g2||0)+l.gmv;});}
     var it=Object.entries(m).sort(function(a,b){return b[1].g1-a[1].g1;});
     var hd='<tr><th>'+lb+'</th><th>GMV</th><th>%</th>';
