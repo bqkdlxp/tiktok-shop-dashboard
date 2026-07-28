@@ -71,6 +71,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Micr
 .lk{color:var(--p);text-decoration:none}.lk:hover{text-decoration:underline}.lk::after{content:' ↗';font-size:9px;opacity:.5}
 @media(max-width:1200px){.kpi-r{grid-template-columns:repeat(3,1fr)}.cr2{grid-template-columns:1fr}.rg{grid-template-columns:1fr}.ig{grid-template-columns:1fr}}
 @media(max-width:768px){.kpi-r{grid-template-columns:repeat(2,1fr)}}
+  .collapse-btn{cursor:pointer;background:none;border:none;font-size:14px;color:var(--m);padding:2px 6px;position:absolute;top:8px;right:10px;z-index:5;}
+  .sec,.cbx{position:relative;}
+  .sec-hd h2{padding-right:30px;}
+  .cbx h3{padding-right:30px;}
 </style>
 </head>
 <body>
@@ -94,30 +98,43 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Micr
 </div>
 
 <div class="ctn">
-  <div class="kpi-r" id="kpi-r"></div>
+  <div class="sec-hd" style="margin-bottom:8px;"><h2>📊 核心指标</h2><button class="collapse-btn" onclick="toggleSec(this)">▼</button></div><div class="kpi-r" id="kpi-r"></div>
 
   <div class="sec">
-    <div class="sec-hd"><h2>🔍 筛选条件</h2></div>
+    <div class="sec-hd"><h2>🔍 筛选条件</h2><button class="collapse-btn" onclick="toggleSec(this)">▼</button></div>
     <div class="flt-r" id="flt-r"></div>
   </div>
 
   <div class="cr2">
-    <div class="cbx"><h3>📈 趋势分析 — 每日 GMV 与订单量</h3><div class="anno" id="an-t"></div><div class="cin" id="c-t"></div></div>
-    <div class="cbx"><h3>🔀 内容→类目 流向桑基图</h3><div class="anno" id="an-sk"></div><div class="cin" id="c-sk"></div></div>
+    <div class="cbx"><h3>📈 趋势分析 — 每日 GMV 与订单量 <button class="collapse-btn" onclick="toggleSec(this)">▼</button></h3><div class="anno" id="an-t"></div><div class="cin" id="c-t"></div></div>
+    <div class="cbx"><h3>🔀 内容→类目 流向桑基图 <button class="collapse-btn" onclick="toggleSec(this)">▼</button></h3><div class="anno" id="an-sk"></div><div class="cin" id="c-sk"></div></div>
+  
+  <div style="background:var(--card);border-radius:var(--r);padding:14px;margin-bottom:14px;box-shadow:0 1px 2px rgba(0,0,0,.04);position:relative;" id="decomp-sec">
+    <div class="sec-hd">
+      <h2>🔍 GMV 拆解 — <input type="date" id="decomp-pick" style="padding:4px 8px;border:1px solid var(--b);border-radius:6px;font-size:12px;" onchange="decompDay(this.value)" oninput="decompDay(this.value)"> <span id="decomp-date"></span></h2>
+      <button class="collapse-btn" onclick="toggleSec(this)">▼</button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;">
+      <div style="background:var(--card);border-radius:6px;padding:6px;"><h3 style="font-size:11px;">按内容类型</h3><div id="decomp-ct" style="max-height:130px;overflow-y:auto;"></div></div>
+      <div style="background:var(--card);border-radius:6px;padding:6px;"><h3 style="font-size:11px;">按创作者</h3><div id="decomp-cr" style="max-height:130px;overflow-y:auto;"></div></div>
+      <div style="background:var(--card);border-radius:6px;padding:6px;"><h3 style="font-size:11px;">按活动</h3><div id="decomp-cp" style="max-height:130px;overflow-y:auto;"></div></div>
+      <div style="background:var(--card);border-radius:6px;padding:6px;"><h3 style="font-size:11px;">按商品</h3><div id="decomp-pd" style="max-height:130px;overflow-y:auto;"></div></div>
+    </div>
   </div>
+</div>
 
-  <div class="cbx" style="margin-bottom:14px;"><h3>📊 内容类型贡献 — 各形式 GMV 占比</h3><div class="anno" id="an-st"></div><div class="cin" id="c-st"></div></div>
+  <div class="cbx" style="margin-bottom:14px;"><h3>📊 内容类型贡献 — 各形式 GMV 占比 <button class="collapse-btn" onclick="toggleSec(this)">▼</button></h3><div class="anno" id="an-st"></div><div class="cin" id="c-st"></div></div>
 
-  <div class="cbx" style="margin-bottom:14px;"><h3>📂 子类目 GMV 分布</h3><div class="anno" id="an-sc"></div><div class="cin" id="c-sc"></div></div>
+  <div class="cbx" style="margin-bottom:14px;"><h3>📂 子类目 GMV 分布 <button class="collapse-btn" onclick="toggleSec(this)">▼</button></h3><div class="anno" id="an-sc"></div><div class="cin" id="c-sc"></div></div>
 
   <div class="sec">
-    <div class="sec-hd"><h2>🏆 Top 10 排行榜</h2></div>
+    <div class="sec-hd"><h2>🏆 Top 10 排行榜</h2><button class="collapse-btn" onclick="toggleSec(this)">▼</button></div>
     <div class="rg" id="rank"></div>
     <div class="anno" id="an-rk" style="margin-top:8px;"></div>
   </div>
 
   <div class="sec">
-    <div class="sec-hd"><h2>📋 联动明细表</h2><span id="rc"></span></div>
+    <div class="sec-hd"><h2>📋 联动明细表</h2><button class="collapse-btn" onclick="toggleSec(this)">▼</button><span id="rc"></span></div>
     <div class="tc">
       <input class="ts" id="search" placeholder="🔍 搜索...">
       <select id="psize" style="padding:5px 8px;border:1px solid var(--b);border-radius:6px;font-size:12px;">
@@ -129,7 +146,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Micr
   </div>
 
   <div class="sec">
-    <div class="sec-hd"><h2>💡 结论与建议</h2></div>
+    <div class="sec-hd"><h2>💡 结论与建议</h2><button class="collapse-btn" onclick="toggleSec(this)">▼</button></div>
     <div class="ig" id="insights"></div>
   </div>
 </div>
@@ -158,7 +175,7 @@ var CN={
   'Art Supplies':'美术用品','Stationery Sets':'文具套装',
   'Blind Boxes':'盲盒','Trading Cards':'集换卡牌','Collectible Figures':'收藏人偶','Entertainment Collectibles':'娱乐收藏',
   'Short Video':'短视频','Livestream':'直播','Unboxing':'开箱','Tutorial':'教程','Review':'测评',
-  'Product Anchor':'商品锚点','Shop Window':'橱窗','Search':'搜索导流','Recommendation':'推荐算法',
+  'Product Anchor':'商品锚点','Shop Window':'橱窗','Search':'搜索导流','Recommendation':'推荐算法','Organic':'自然流量','Direct Search':'直接搜索','Organic Browse':'自然浏览',
   'US':'美国','UK':'英国','JP':'日本','KR':'韩国'
 };
 function T(s){return CN[s]?s+' ('+CN[s]+')':s}
@@ -172,34 +189,34 @@ function dA(d,n){var x=new Date(d);x.setDate(x.getDate()+n);return x.toISOString
 function srt(a,k,d){return a.slice().sort(function(x,y){var vx=x[k],vy=y[k];return d==='asc'?(vx>vy?1:-1):(vx<vy?-1:1)})}
 
 function mF(l){
-  var c=CONTENTS.find(function(x){return x.id===l.content_id});
+  var c=l.content_id?CONTENTS.find(function(x){return x.id===l.content_id}):null;
   var p=PRODUCTS.find(function(x){return x.id===l.product_id});
-  if(!c||!p)return false;
+  if(!p)return false;
   var f=S.f;
   // 屏蔽未来数据
   var today=new Date().toISOString().split('T')[0];
   if(l.date>today)return false;
   if(f.cat!=='all'&&p.category!==f.cat)return false;
   if(f.sub!=='all'&&p.subcategory!==f.sub)return false;
-  if(f.ct!=='all'&&c.content_type!==f.ct)return false;
+  if(c&&f.ct!=='all'&&c.content_type!==f.ct)return false;
   if(f.camp!=='all'&&l.campaign!==f.camp)return false;
-  if(f.reg!=='all'&&c.creator_region!==f.reg)return false;
+  if(c&&f.reg!=='all'&&c.creator_region!==f.reg)return false;
   if(f.df&&l.date<f.df)return false;
   if(f.dt&&l.date>f.dt)return false;
   return true;
 }
 function mFD(l){
-  var c=CONTENTS.find(function(x){return x.id===l.content_id});
+  var c=l.content_id?CONTENTS.find(function(x){return x.id===l.content_id}):null;
   var p=PRODUCTS.find(function(x){return x.id===l.product_id});
-  if(!c||!p)return false;
+  if(!p)return false;
   var today=new Date().toISOString().split('T')[0];
   if(l.date>today)return false;
   var f=S.f;
   if(f.cat!=='all'&&p.category!==f.cat)return false;
   if(f.sub!=='all'&&p.subcategory!==f.sub)return false;
-  if(f.ct!=='all'&&c.content_type!==f.ct)return false;
+  if(c&&f.ct!=='all'&&c.content_type!==f.ct)return false;
   if(f.camp!=='all'&&l.campaign!==f.camp)return false;
-  if(f.reg!=='all'&&c.creator_region!==f.reg)return false;
+  if(c&&f.reg!=='all'&&c.creator_region!==f.reg)return false;
   return true;
 }
 function GF(){var a=LINKAGES.filter(mF);var q=S.q.toLowerCase();if(q){a=a.filter(function(l){var c=CONTENTS.find(function(x){return x.id===l.content_id});var p=PRODUCTS.find(function(x){return x.id===l.product_id});return(c&&c.title.toLowerCase().indexOf(q)!==-1)||(c&&c.creator.toLowerCase().indexOf(q)!==-1)||(p&&p.name.toLowerCase().indexOf(q)!==-1)||l.campaign.toLowerCase().indexOf(q)!==-1});}return a}
@@ -257,8 +274,8 @@ function rFLT(){
     '<label>从</label><input type="date" id="f-df" value="'+f.df+'"><label>至</label><input type="date" id="f-dt" value="'+f.dt+'">'+
     '<button class="btn" id="btn-rst">🔄 重置</button>';
   ['cat','sub','ct','camp','reg'].forEach(function(k){document.getElementById('f-'+k).onchange=function(){S.f[k]=this.value;if(k==='cat')S.f.sub='all';S.p=1;refresh();};});
-  document.getElementById('f-df').onchange=function(){S.f.df=this.value;S.p=1;refresh();};
-  document.getElementById('f-dt').onchange=function(){S.f.dt=this.value;S.p=1;refresh();};
+  document.getElementById('f-df').onchange=function(){S.f.df=this.value;S.p=1;refresh();setTimeout(function(){decompDay();},100);};
+  document.getElementById('f-dt').onchange=function(){S.f.dt=this.value;S.p=1;refresh();setTimeout(function(){decompDay();},100);};
   document.getElementById('btn-rst').onclick=function(){var now=new Date(),today=now.toISOString().split('T')[0];var ago=new Date(now.getTime()-30*86400000).toISOString().split('T')[0];S.f={cat:'Toys',sub:'all',ct:'all',camp:'all',reg:'all',df:ago,dt:today};S.q='';document.getElementById('search').value='';S.p=1;refresh();};
 }
 
@@ -412,6 +429,12 @@ function refresh(){
   rKPI();rFLT();rTrend();rSankey();rStack();rSubcat();rRank();rTbl();rIns();
 }
 
+function toggleSec(btn){var sec=btn.closest(".sec")||btn.closest(".cbx");if(!sec)return;var hidden=false,first=true;for(var i=0;i<sec.children.length;i++){var c=sec.children[i];if(c===btn.parentElement||c.classList.contains("sec-hd")||c===btn)continue;if(first){hidden=c.style.display==="none";first=false;}c.style.display=hidden?"":"none";}btn.textContent=hidden?"▼":"▶";}
+function decompDay(forceDate){if(!forceDate){var dp=document.getElementById("decomp-pick");if(dp&&dp.value)forceDate=dp.value;}var aAll=LINKAGES.filter(mFD);var a=aAll.filter(function(l){return (!S.f.df||l.date>=S.f.df)&&(!S.f.dt||l.date<=S.f.dt);});if(a.length===0)return;if(forceDate){var dt=forceDate;}else{var bt2={};a.forEach(function(l){if(!bt2[l.date])bt2[l.date]=0;bt2[l.date]+=l.gmv;});var dt=Object.keys(bt2).sort().reduce(function(a,b){return bt2[a]>bt2[b]?a:b;},'');}var bt={};aAll.forEach(function(l){if(!bt[l.date])bt[l.date]={g:0,o:0,l:[]};bt[l.date].g+=l.gmv;bt[l.date].o+=l.orders;bt[l.date].l.push(l);});var ds=Object.keys(bt).sort();if(!bt[dt]){dt=ds.filter(function(d){return d<=dt;}).pop()||ds[0];if(!bt[dt])return;}var d=bt[dt];document.getElementById("decomp-pick").value=dt;document.getElementById("decomp-date").textContent=dt+" | GMV: "+M(d.g)+" | 订单: "+F(d.o);
+var avgG=aAll.reduce(function(s,l){return s+l.gmv;},0)/Math.max(ds.length,1);
+var dev=(d.g-avgG)/Math.max(avgG,1)*100;
+var tag=dev>50?"🔥 异常高峰 (+"+dev.toFixed(0)+"%)":dev>20?"📈 偏高 (+"+dev.toFixed(0)+"%)":dev<-30?"📉 异常低谷 ("+dev.toFixed(0)+"%)":dev<-10?"📊 偏低 ("+dev.toFixed(0)+"%)":"✅ 正常范围";
+document.getElementById("decomp-date").textContent+="  | "+tag+" (日均 "+M(avgG)+")";function tb(kf,lb){var m={};d.l.forEach(function(l){var k=kf(l);if(!m[k])m[k]=0;m[k]+=l.gmv;});return"<table class=\"rtbl\" style=\"width:100%;\"><thead><tr><th>"+lb+"</th><th>GMV</th><th>占比</th></tr></thead><tbody>"+Object.entries(m).sort(function(a,b){return b[1]-a[1];}).map(function(e){return"<tr><td>"+TC(e[0])+"</td><td style=\"font-weight:600;\">"+M(e[1])+"</td><td>"+((e[1]/d.g*100).toFixed(1))+"%</td></tr>";}).join("")+"</tbody></table>";}document.getElementById("decomp-ct").innerHTML=tb(function(l){var c=l.content_id?CONTENTS.find(function(x){return x.id===l.content_id}):null;return c?c.content_type:"自然流量";},"内容类型");document.getElementById("decomp-cr").innerHTML=tb(function(l){var c=l.content_id?CONTENTS.find(function(x){return x.id===l.content_id}):null;return c?c.creator:"自然流量";},"创作者");document.getElementById("decomp-cp").innerHTML=tb(function(l){return l.campaign||"无活动";},"活动");document.getElementById("decomp-pd").innerHTML=tb(function(l){var p=PRODUCTS.find(function(x){return x.id===l.product_id});return p?p.name:l.product_id;},"商品");}
 window.switchCat=function(cat){S.f.cat=cat;S.f.sub='all';['toy','col','sta','all'].forEach(function(k){var e=document.getElementById('bt-'+k);if(e)e.className='badge'+(k===(cat==='Toys'?'toy':cat==='Collectibles'?'col':cat==='Stationery'?'sta':'all')?' cat-on':'');});S.p=1;refresh();};
 
 function init(){
@@ -427,6 +450,7 @@ function init(){
   document.getElementById('fupload').onchange=function(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(ev){try{var d=JSON.parse(ev.target.result);if(d.products)PRODUCTS=d.products;if(d.contents)CONTENTS=d.contents;if(d.linkages)LINKAGES=d.linkages;document.getElementById('datasrc').textContent='📂 '+f.name;refresh();}catch(err){alert('JSON错误: '+err.message);}};r.readAsText(f);};
   window.onresize=function(){CH.forEach(function(c){try{c.resize()}catch(e){}});};
   refresh();
+  setTimeout(function(){decompDay();},300);
 }
 
 if(typeof echarts!=='undefined'&&typeof PRODUCTS!=='undefined'){init();}else{window.onload=function(){setTimeout(function(){if(typeof echarts!=='undefined'&&typeof PRODUCTS!=='undefined')init();},500);};}
