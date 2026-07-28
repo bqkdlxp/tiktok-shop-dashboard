@@ -21,8 +21,7 @@ generate_real_data.py — TikTok Shop 三大品类看板数据
 import json, random
 from datetime import datetime, timedelta
 
-import os
-random.seed(int(os.environ.get('RANDOM_SEED', '2026')))
+random.seed(20260728)
 
 # ============================================================
 # 真实产品数据 (2026年7月)
@@ -35,9 +34,9 @@ REAL_PRODUCTS = [
     ('Smart Hover Ball LED Flying Gyro Toy', 'Toys', 'Classic Toys', 8.00, 35000, 'FastMoss'),
     # Games & Puzzles
     ('Family Board Game Night Bundle (5 Games)', 'Toys', 'Games & Puzzles', 24.99, 12000, 'Dashboardly 2026'),
-    ('1000-Piece Jigsaw Puzzle - World Landmarks', 'Toys', 'Games & Puzzles', 16.99, 15000, 'Dashboardly 2026'),
+    ('1000-Piece Jigsaw Puzzle - World Landmarks', 'Toys', 'Games & Puzzles', 16.99, 18000, 'Dashboardly 2026'),
     # Educational
-    ('STEM Building Block Set (1500-Piece Engineering Kit)', 'Toys', 'Educational Toys', 29.99, 5000, 'Dashboardly 2026'),
+    ('STEM Building Block Set (1500-Piece Engineering Kit)', 'Toys', 'Educational Toys', 29.99, 15000, 'Dashboardly 2026'),
     ('Magnetic Tiles Construction Set (100pc)', 'Toys', 'Educational Toys', 29.99, 12000, 'Dashboardly 2026'),
     # Electronic/RC
     ('Mini RC Monster Truck 1:64 Scale', 'Toys', 'Electronic/RC', 18.00, 7000, 'chwang.com 2026'),
@@ -58,15 +57,15 @@ REAL_PRODUCTS = [
     ('Fidget Toy Variety Pack (24-Piece Assorted)', 'Toys', 'Dolls & Plush', 16.99, 28000, 'Kalodata 2026'),
 
     # ---- ✏️ Office & School Supplies ----
-    ('Blind Box Mystery Pen Set (12 Collectible Designs)', 'Stationery', 'Writing Supplies', 9.99, 25000, 'Dashboardly 2026'),
+    ('Blind Box Mystery Pen Set (12 Collectible Designs)', 'Stationery', 'Writing Supplies', 9.99, 28000, 'Dashboardly 2026'),
     ('Pilot Frixion Erasable Gel Pen Set (12 Colors)', 'Stationery', 'Writing Supplies', 21.99, 14000, 'Dashboardly 2026'),
-    ('Transparent Sticky Notes 3x3 (8 Pastel Pads)', 'Stationery', 'Paper & Notebooks', 5.99, 35000, 'Dashboardly 2026'),
+    ('Transparent Sticky Notes 3x3 (8 Pastel Pads)', 'Stationery', 'Paper & Notebooks', 5.99, 38000, 'Dashboardly 2026'),
     ('Bullet Journal Deluxe Starter Kit', 'Stationery', 'Paper & Notebooks', 27.99, 8500, 'Dashboardly 2026'),
     ('Aesthetic Desk Organizer - Rotating Pen Holder', 'Stationery', 'Desk Accessories', 25.99, 10000, 'Dashboardly 2026'),
-    ('LED Desk Lamp with USB Charging Port', 'Stationery', 'Desk Accessories', 19.99, 5000, 'Dashboardly 2026'),
+    ('LED Desk Lamp with USB Charging Port', 'Stationery', 'Desk Accessories', 19.99, 15000, 'Dashboardly 2026'),
     ('Vintage Washi Tape Set (60 Rolls + Dispenser)', 'Stationery', 'Art Supplies', 8.99, 25000, 'Dashboardly 2026'),
     ('Double-Sided Acrylic Marker Set (24 Colors)', 'Stationery', 'Art Supplies', 14.99, 22000, 'Dashboardly 2026'),
-    ('Back-to-School Stationery Bundle (30-Piece)', 'Stationery', 'Stationery Sets', 19.99, 15000, 'Dashboardly 2026'),
+    ('Back-to-School Stationery Bundle (30-Piece)', 'Stationery', 'Stationery Sets', 19.99, 18000, 'Dashboardly 2026'),
 
     # ---- 🎴 Collectibles (潮玩收藏) ----
     # Blind Boxes
@@ -75,8 +74,8 @@ REAL_PRODUCTS = [
     ('POP MART SKULLPANDA Impression Series Blind Box', 'Collectibles', 'Blind Boxes', 29.99, 18000, 'FindNiche SG Jul 2026'),
     ('Trendy Anime Figure Mystery Box (6pc Set)', 'Collectibles', 'Blind Boxes', 39.99, 12000, 'FindNiche SG Jul 2026'),
     # Trading Cards
-    ('Pokémon Scarlet & Violet Booster Box (36 Packs)', 'Collectibles', 'Trading Cards', 119.99, 5000, 'Dashboardly 2026'),
-    ('One Piece TCG Booster Box (24 Packs)', 'Collectibles', 'Trading Cards', 89.99, 5000, 'Dashboardly 2026'),
+    ('Pokémon Scarlet & Violet Booster Box (36 Packs)', 'Collectibles', 'Trading Cards', 119.99, 15000, 'Dashboardly 2026'),
+    ('One Piece TCG Booster Box (24 Packs)', 'Collectibles', 'Trading Cards', 89.99, 8000, 'Dashboardly 2026'),
     # Collectible Figures
     ('Die-Cast Metal Car Model Collection (合金车模)', 'Collectibles', 'Collectible Figures', 24.99, 35000, 'Dashboardly 2026'),
     ('3D Printed Dragon Egg + Dragon Figure Set', 'Collectibles', 'Collectible Figures', 19.00, 18000, 'EchoTik 2026'),
@@ -203,7 +202,7 @@ def generate_contents(products):
     contents = []
     base = datetime(2025, 11, 1)  # 从2025年11月开始，覆盖全年大促
     cats = ['Toys', 'Stationery', 'Collectibles']
-    for i in range(350):  # 120条内容覆盖12个月
+    for i in range(120):  # 120条内容覆盖12个月
         creator = random.choice(CREATORS)
         ctype = random.choice(CONTENT_TYPES)
         cat = cats[i % 3]  # 均匀分配到三个品类
@@ -220,13 +219,13 @@ def generate_contents(products):
         saves = int(views * random.uniform(0.006, 0.05))
         ir = round((likes + comments + shares + saves) / max(views, 1) * 100, 2)
 
-        linked = random.sample(cat_products, min(random.randint(2, 5), len(cat_products)))
+        linked = random.sample(cat_products, min(random.randint(2, 6), len(cat_products)))
         contents.append({
             'id': gen_id('C', i), 'title': f"{random.choice(['🔥','✨','🎯','💦','🎨','📦','🎴'])} {random.choice(['MUST-HAVE','VIRAL','BEST','TRENDING','NEW'])} {cat} {random.choice(['Find!','Review','Unboxing','Haul','Demo'])}",
             'creator': creator['name'], 'creator_region': creator['region'],
             'creator_followers': creator['followers'], 'creator_niche': creator['niche'],
             'content_type': ctype, 'category': cat, 'duration_sec': dur,
-            'publish_date': (base + timedelta(days=i % 340)).strftime('%Y-%m-%d'),
+            'publish_date': (base + timedelta(days=random.randint(0, 340))).strftime('%Y-%m-%d'),
             'views': views, 'likes': likes, 'comments': comments, 'shares': shares, 'saves': saves,
             'interaction_rate': ir, 'completion_rate': round(random.uniform(0.22, 0.82), 2),
             'linked_products': [p['id'] for p in linked],
@@ -260,51 +259,14 @@ def generate_linkages(products, contents):
             ldate = (pub + timedelta(days=random.randint(0, 2))).strftime('%Y-%m-%d')
             linkages.append({
                 'id': gen_id('L', len(linkages)), 'content_id': c['id'], 'product_id': pid,
-                'linkage_type': random.choice(['Product Anchor', 'Shop Window', 'Direct Search', 'Recommendation', 'Organic Browse']),
+                'linkage_type': random.choice(['Product Anchor', 'Shop Window', 'Search', 'Recommendation']),
                 'impressions': imp, 'product_clicks': clicks, 'add_to_cart': int(clicks * random.uniform(0.18, 0.45)),
                 'orders': orders, 'gmv': gmv, 'cost': cost,
                 'roi': round(gmv / cost, 2) if cost > 0 else -1, 'has_ad': has_ad,
                 'date': ldate,
-                'campaign': random.choice(get_campaigns_for_date(ldate)) if random.random() < 0.55 else 'Organic',
+                'campaign': random.choice(get_campaigns_for_date(ldate)),
                 'creator_region': c['creator_region'], 'creator_niche': c['creator_niche'],
             })
-    
-    # 额外生成一批不靠内容的自然成交（搜索/推荐/逛店直接下单）
-    for i in range(500):
-        p = random.choice(products)
-        orders = random.randint(5, 500)
-        gmv = round(orders * p['price'], 2)
-        ldate = (datetime(2025, 11, 1) + timedelta(days=random.randint(0, 340))).strftime('%Y-%m-%d')
-        linkages.append({
-            'id': gen_id('N', len(linkages)), 'content_id': None, 'product_id': p['id'],
-            'linkage_type': random.choice(['Direct Search', 'Organic Browse', 'Recommendation', 'Shop Tab', 'For You Feed']),
-            'impressions': orders * random.randint(10, 100), 'product_clicks': int(orders / random.uniform(0.03, 0.12)),
-            'add_to_cart': int(orders * 1.5), 'orders': orders, 'gmv': gmv, 'cost': 0,
-            'roi': -1, 'has_ad': False, 'date': ldate,
-            'campaign': 'Organic',
-            'creator_region': '', 'creator_niche': '',
-        })
-
-    
-    # 保证每天都有数据：每天至少3-8条自然成交
-    base = datetime(2025, 11, 1)
-    for d in range(340):
-        day = (base + timedelta(days=d)).strftime('%Y-%m-%d')
-        count = random.randint(8, 18)
-        for _ in range(count):
-            p = random.choice(products)
-            orders = random.randint(3, 200)
-            gmv = round(orders * p['price'], 2)
-            linkages.append({
-                'id': gen_id('D', len(linkages)), 'content_id': None, 'product_id': p['id'],
-                'linkage_type': random.choice(['Direct Search', 'Organic Browse', 'Shop Tab']),
-                'impressions': orders * random.randint(20, 200), 'product_clicks': int(orders / random.uniform(0.04, 0.15)),
-                'add_to_cart': int(orders * 1.3), 'orders': orders, 'gmv': gmv, 'cost': 0,
-                'roi': -1, 'has_ad': False, 'date': day,
-                'campaign': 'Organic',
-                'creator_region': '', 'creator_niche': '',
-            })
-
     return linkages
 
 
