@@ -470,7 +470,7 @@ var topCT=a1.reduce(function(m,l){var c=l.content_id?CONTENTS.find(function(x){r
 var bestCT=Object.keys(topCT).sort(function(a,b){return topCT[b]-topCT[a];})[0];
 var topCR=a1.reduce(function(m,l){var c=l.content_id?CONTENTS.find(function(x){return x.id===l.content_id}):null;var t=c?c.creator:'自然流量';m[t]=(m[t]||0)+l.gmv;return m;},{});
 var bestCR=Object.keys(topCR).sort(function(a,b){return topCR[b]-topCR[a];})[0];
-try{var avgG=ds.reduce(function(s,d){return s+bt[d].g;},0)/ds.length;
+try{
 var devPct=((bt[_decompDate].g-avgG)/avgG*100).toFixed(0);
 var tag=devPct>50?'🔥 异常高峰':devPct>20?'📈 显著偏高':devPct<-30?'📉 异常低谷':'✅ 正常范围';
 document.getElementById('decomp-date').textContent+=' | '+tag+' | 主因: '+TC(bestCT)+' + '+TC(bestCR);}catch(e){document.getElementById('decomp-date').textContent+=' | 分析失败: '+e.message;}
