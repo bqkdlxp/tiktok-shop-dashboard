@@ -112,19 +112,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Micr
   <div class="cr2">
     <div class="cbx"><h3>📈 趋势分析 — 每日 GMV 与订单量 <button class="collapse-btn" onclick="toggleSec(this)">▼</button></h3><div class="anno" id="an-t"></div><div class="cin" id="c-t"></div></div>
     <div class="cbx"><h3>🔀 内容→类目 流向桑基图 <button class="collapse-btn" onclick="toggleSec(this)">▼</button></h3><div class="anno" id="an-sk"></div><div class="cin" id="c-sk"></div></div>
-  
-  
+  </div>
+
   <div class="sec" id="decomp-sec" style="display:none;">
     <div class="sec-hd">
       <h2>🔍 GMV 拆解 — <span id="decomp-date"></span></h2>
       <button class="collapse-btn" onclick="toggleSec(this)">▼</button>
       <button class="btn" style="margin-left:8px;" onclick="document.getElementById('decomp-sec').style.display='none'">✕ 关闭</button>
     </div>
-    <div class="cr2">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;">
       <div><h3 style="font-size:12px;">按内容类型</h3><div id="decomp-ct" style="max-height:200px;overflow-y:auto;"></div></div>
       <div><h3 style="font-size:12px;">按创作者</h3><div id="decomp-cr" style="max-height:200px;overflow-y:auto;"></div></div>
-    </div>
-    <div class="cr2">
       <div><h3 style="font-size:12px;">按活动</h3><div id="decomp-cp" style="max-height:200px;overflow-y:auto;"></div></div>
       <div><h3 style="font-size:12px;">按商品</h3><div id="decomp-pd" style="max-height:200px;overflow-y:auto;"></div></div>
     </div>
