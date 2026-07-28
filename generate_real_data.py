@@ -203,7 +203,7 @@ def generate_contents(products):
     contents = []
     base = datetime(2025, 11, 1)  # 从2025年11月开始，覆盖全年大促
     cats = ['Toys', 'Stationery', 'Collectibles']
-    for i in range(120):  # 120条内容覆盖12个月
+    for i in range(3000):  # 3000条内容，每天约8-9条
         creator = random.choice(CREATORS)
         ctype = random.choice(CONTENT_TYPES)
         cat = cats[i % 3]  # 均匀分配到三个品类
@@ -226,7 +226,7 @@ def generate_contents(products):
             'creator': creator['name'], 'creator_region': creator['region'],
             'creator_followers': creator['followers'], 'creator_niche': creator['niche'],
             'content_type': ctype, 'category': cat, 'duration_sec': dur,
-            'publish_date': (base + timedelta(days=random.randint(0, 340))).strftime('%Y-%m-%d'),
+            'publish_date': (base + timedelta(days=i % 340)).strftime('%Y-%m-%d'),
             'views': views, 'likes': likes, 'comments': comments, 'shares': shares, 'saves': saves,
             'interaction_rate': ir, 'completion_rate': round(random.uniform(0.22, 0.82), 2),
             'linked_products': [p['id'] for p in linked],
@@ -260,14 +260,30 @@ def generate_linkages(products, contents):
             ldate = (pub + timedelta(days=random.randint(0, 2))).strftime('%Y-%m-%d')
             linkages.append({
                 'id': gen_id('L', len(linkages)), 'content_id': c['id'], 'product_id': pid,
-                'linkage_type': random.choice(['Product Anchor', 'Shop Window', 'Search', 'Recommendation']),
+                # 内容驱动 vs 非内容驱动：约30%的订单不经过创作者内容
+            'linkage_type': random.choice(['Product Anchor', 'Shop Window', 'Direct Search', 'Recommendation', 'Organic Browse']),
                 'impressions': imp, 'product_clicks': clicks, 'add_to_cart': int(clicks * random.uniform(0.18, 0.45)),
                 'orders': orders, 'gmv': gmv, 'cost': cost,
                 'roi': round(gmv / cost, 2) if cost > 0 else -1, 'has_ad': has_ad,
                 'date': ldate,
-                'campaign': random.choice(get_campaigns_for_date(ldate)),
+                'campaign': random.choice(get_campaigns_for_date(ldate)) if random.random() < 0.55 else 'Organic',
                 'creator_region': c['creator_region'], 'creator_niche': c['creator_niche'],
             })
+    # 额外生成一批不靠内容的自然成交（搜索/推荐/逛店直接下单）
+    for i in range(1000):
+        p = random.choice(products)
+        orders = random.randint(5, 500)
+        gmv = round(orders * p['price'], 2)
+        ldate = (datetime(2025, 11, 1) + timedelta(days=random.randint(0, 340))).strftime('%Y-%m-%d')
+        linkages.append({
+            'id': gen_id('N', len(linkages)), 'content_id': None, 'product_id': p['id'],
+            'linkage_type': random.choice(['Direct Search', 'Organic Browse', 'Recommendation']),
+            'impressions': orders * random.randint(10, 100), 'product_clicks': int(orders / random.uniform(0.03, 0.12)),
+            'add_to_cart': int(orders * 1.5), 'orders': orders, 'gmv': gmv, 'cost': 0,
+            'roi': -1, 'has_ad': False, 'date': ldate,
+            'campaign': 'Organic',
+            'creator_region': '', 'creator_niche': '',
+        })
     return linkages
 
 
