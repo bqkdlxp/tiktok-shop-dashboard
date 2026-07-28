@@ -490,7 +490,18 @@ function decompDay(dateStr){
   document.getElementById('decomp-pd').innerHTML=tb(a1,'商品',function(l){var p=PRODUCTS.find(function(x){return x.id===l.product_id});return p?p.name:l.product_id;});
 }
 
-function toggleSec(btn){var sec=btn.closest(".sec")||btn.closest(".cbx");if(!sec)return;var hidden=false,first=true;for(var i=0;i<sec.children.length;i++){var c=sec.children[i];if(c===btn.parentElement||c.classList.contains("sec-hd")||c===btn)continue;if(first){hidden=c.style.display==="none";first=false;}c.style.display=hidden?"":"none";}btn.textContent=hidden?"▼":"▶";}
+function toggleSec(btn){
+  var sec=btn.closest(".sec")||btn.closest(".cbx");if(!sec)return;
+  var hidden=false;
+  for(var i=0;i<sec.children.length;i++){
+    var c=sec.children[i];
+    if(c===btn.parentElement||c.classList.contains("sec-hd")||c===btn)continue;
+    if(hidden===false){hidden=c.style.maxHeight==="0px";}
+    if(hidden){c.setAttribute("data-prev-height",c.style.maxHeight||"");c.style.maxHeight="0px";c.style.overflow="hidden";c.style.opacity="0";}
+    else{var ph=c.getAttribute("data-prev-height")||"none";c.style.maxHeight=ph==="none"?"2000px":ph;c.style.overflow="";c.style.opacity="1";}
+  }
+  btn.textContent=hidden?"▼":"▶";
+}
 window.switchCat=function(cat){S.f.cat=cat;S.f.sub='all';
   var target=cat==='Toys'?'toy':cat==='Collectibles'?'col':cat==='Stationery'?'sta':'all';
   ['toy','col','sta','all'].forEach(function(k){var e=document.getElementById('bt-'+k);if(e)e.className='badge'+(k===target?' cat-on':'');});
