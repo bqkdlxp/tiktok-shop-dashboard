@@ -311,7 +311,7 @@ function rTrend(){
 
 function rSankey(){
   var a=GF(),flows={};
-  a.forEach(function(l){var c=CONTENTS.find(function(x){return x.id===l.content_id});var p=PRODUCTS.find(function(x){return x.id===l.product_id});if(!c||!p)return;var k=c.content_type+'|'+p.category;if(!flows[k])flows[k]=0;flows[k]+=l.gmv;});
+  a.forEach(function(l){var c=l.content_id?CONTENTS.find(function(x){return x.id===l.content_id}):null;var p=PRODUCTS.find(function(x){return x.id===l.product_id});if(!p)return;var src=c?c.content_type:'自然流量';var k=src+'|'+p.category;if(!flows[k])flows[k]=0;flows[k]+=l.gmv;});
   var nodes=[],seen={},links=[];
   Object.entries(flows).forEach(function(e){var p=e[0].split('|');if(!seen[p[0]]){seen[p[0]]=1;nodes.push({name:T(p[0])});}if(!seen[p[1]]){seen[p[1]]=1;nodes.push({name:T(p[1])});}links.push({source:T(p[0]),target:T(p[1]),value:Math.round(e[1])});});
   var c=echarts.init(document.getElementById('c-sk'));
@@ -323,9 +323,9 @@ function rSankey(){
 
 function rStack(){
   var a=GF(),types=[],by={};
-  a.forEach(function(l){var c=CONTENTS.find(function(x){return x.id===l.content_id});if(!c)return;if(types.indexOf(c.content_type)===-1){types.push(c.content_type);by[c.content_type]={};}});
+  a.forEach(function(l){var c=l.content_id?CONTENTS.find(function(x){return x.id===l.content_id}):null;var t=c?c.content_type:'自然流量';if(types.indexOf(t)===-1){types.push(t);by[t]={};}});
   var ad=new Set();
-  a.forEach(function(l){var c=CONTENTS.find(function(x){return x.id===l.content_id});if(!c)return;if(!by[c.content_type][l.date])by[c.content_type][l.date]=0;by[c.content_type][l.date]+=l.gmv;ad.add(l.date);});
+  a.forEach(function(l){var c=l.content_id?CONTENTS.find(function(x){return x.id===l.content_id}):null;var t=c?c.content_type:'自然流量';if(!by[t][l.date])by[t][l.date]=0;by[t][l.date]+=l.gmv;ad.add(l.date);});
   var ds=Array.from(ad).sort();
   var cs=['#6366f1','#3b82f6','#10b981','#f59e0b','#ef4444','#8b5cf6','#ec4899','#14b8a6'];
   var c=echarts.init(document.getElementById('c-st'));
