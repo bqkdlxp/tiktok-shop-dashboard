@@ -17,8 +17,8 @@ with open('index.html') as f:
     html = f.read()
 
 html = re.sub(
-    r'var PRODUCTS = \[.*?var DATA_LOADED = true;\n',
-    new_data.strip(),
+    r'var PRODUCTS = \[.*?var DATA_LOADED = true;',
+    new_data.strip() + '\n',
     html, flags=re.DOTALL
 )
 with open('index.html', 'w') as f:
