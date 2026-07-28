@@ -476,7 +476,7 @@ function decompDay(dateStr){
     var dp=avgG>0?((curG-avgG)/avgG*100).toFixed(0):0;
     var tag=dp>50?'🔥 异常高峰':dp>20?'📈 显著偏高':dp<-30?'📉 异常低谷':'✅ 正常范围';
     document.getElementById('decomp-date').textContent+=' | '+tag+' ('+(dp>=0?'+':'')+dp+'%) | 主因: '+TC(bct)+' + '+TC(bcr);
-  }catch(e){document.getElementById('decomp-date').textContent+=' | 分析失败';}  function tb(arr,lb,kf){var m={},tg=arr.reduce(function(s,l){return s+l.gmv;},0);arr.forEach(function(l){var k=kf?kf(l):l.campaign;if(!m[k])m[k]={g1:0};m[k].g1+=l.gmv;});if(a2){a2.forEach(function(l){var k=kf?kf(l):l.campaign;if(!m[k])m[k]={g1:0,g2:0};m[k].g2=(m[k].g2||0)+l.gmv;});}
+  }catch(e){document.getElementById('decomp-date').textContent+=' | 错误: '+e.message+'';}  function tb(arr,lb,kf){var m={},tg=arr.reduce(function(s,l){return s+l.gmv;},0);arr.forEach(function(l){var k=kf?kf(l):l.campaign;if(!m[k])m[k]={g1:0};m[k].g1+=l.gmv;});if(a2){a2.forEach(function(l){var k=kf?kf(l):l.campaign;if(!m[k])m[k]={g1:0,g2:0};m[k].g2=(m[k].g2||0)+l.gmv;});}
     var it=Object.entries(m).sort(function(a,b){return b[1].g1-a[1].g1;});
     var hd='<tr><th>'+lb+'</th><th>GMV</th><th>%</th>';
     if(a2)hd+='<th>对比GMV</th><th>变化</th>';
