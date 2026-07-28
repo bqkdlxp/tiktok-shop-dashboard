@@ -203,7 +203,7 @@ def generate_contents(products):
     contents = []
     base = datetime(2025, 11, 1)  # 从2025年11月开始，覆盖全年大促
     cats = ['Toys', 'Stationery', 'Collectibles']
-    for i in range(3000):  # 120条内容覆盖12个月
+    for i in range(350):  # 120条内容覆盖12个月
         creator = random.choice(CREATORS)
         ctype = random.choice(CONTENT_TYPES)
         cat = cats[i % 3]  # 均匀分配到三个品类
@@ -220,7 +220,7 @@ def generate_contents(products):
         saves = int(views * random.uniform(0.006, 0.05))
         ir = round((likes + comments + shares + saves) / max(views, 1) * 100, 2)
 
-        linked = random.sample(cat_products, min(random.randint(2, 6), len(cat_products)))
+        linked = random.sample(cat_products, min(random.randint(2, 5), len(cat_products)))
         contents.append({
             'id': gen_id('C', i), 'title': f"{random.choice(['🔥','✨','🎯','💦','🎨','📦','🎴'])} {random.choice(['MUST-HAVE','VIRAL','BEST','TRENDING','NEW'])} {cat} {random.choice(['Find!','Review','Unboxing','Haul','Demo'])}",
             'creator': creator['name'], 'creator_region': creator['region'],
@@ -270,7 +270,7 @@ def generate_linkages(products, contents):
             })
     
     # 额外生成一批不靠内容的自然成交（搜索/推荐/逛店直接下单）
-    for i in range(2500):
+    for i in range(500):
         p = random.choice(products)
         orders = random.randint(5, 500)
         gmv = round(orders * p['price'], 2)
@@ -290,7 +290,7 @@ def generate_linkages(products, contents):
     base = datetime(2025, 11, 1)
     for d in range(340):
         day = (base + timedelta(days=d)).strftime('%Y-%m-%d')
-        count = random.randint(3, 8)
+        count = random.randint(8, 18)
         for _ in range(count):
             p = random.choice(products)
             orders = random.randint(3, 200)
