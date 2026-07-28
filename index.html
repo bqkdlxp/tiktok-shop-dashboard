@@ -265,7 +265,7 @@ function rFLT(){
     sel('cat',cats,'大类')+sel('sub',sc,'子类目')+sel('ct',cts,'内容类型')+sel('camp',camps,'活动')+sel('reg',regs,'地区')+
     '<label>从</label><input type="date" id="f-df" value="'+f.df+'"><label>至</label><input type="date" id="f-dt" value="'+f.dt+'">'+
     '<button class="btn" id="btn-rst">🔄 重置</button>';
-  ['cat','sub','ct','camp','reg'].forEach(function(k){document.getElementById('f-'+k).onchange=function(){S.f[k]=this.value;if(k==='cat')S.f.sub='all';S.p=1;refresh();};});
+  ['cat','sub','ct','camp','reg'].forEach(function(k){document.getElementById('f-'+k).onchange=function(){S.f[k]=this.value;if(k==='cat'){S.f.sub='all';var catMap={Toys:'toy',Collectibles:'col',Stationery:'sta',all:'all'};['toy','col','sta','all'].forEach(function(x){var e=document.getElementById('bt-'+x);if(e)e.className='badge'+(x===catMap[this.value]?' cat-on':'');});}S.p=1;refresh();};});
   document.getElementById('f-df').onchange=function(){S.f.df=this.value;S.p=1;refresh();};
   document.getElementById('f-dt').onchange=function(){S.f.dt=this.value;S.p=1;refresh();};
   document.getElementById('btn-rst').onclick=function(){var now=new Date(),today=now.toISOString().split('T')[0];var ago=new Date(now.getTime()-30*86400000).toISOString().split('T')[0];S.f={cat:'all',sub:'all',ct:'all',camp:'all',reg:'all',df:ago,dt:today};S.q='';document.getElementById('search').value='';S.p=1;refresh();};
