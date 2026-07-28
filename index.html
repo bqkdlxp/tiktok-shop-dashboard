@@ -477,7 +477,7 @@ function decompDay(dateStr){
     if(a2)hd+='<th>对比</th><th>±</th>';
     hd+='</tr>';
     return'<table class="rtbl" style="width:100%;">'+hd+it.map(function(e){var row='<tr><td>'+TC(e[0])+'</td><td style="font-weight:600;">'+M(e[1].g1)+'</td><td>'+((e[1].g1/tg1*100).toFixed(1))+'%</td>';
-      if(a2){var g2=e[1].g2||0;var d=g2>0?((e[1].g1-g2)/g2*100).toFixed(0):'';row+='<td>'+M(g2)+'</td><td style="color:'+(parseFloat(d)>0?'#10b981':'#ef4444')+';">'+(parseFloat(d)>=0?'+':'')+d+'%</td>';}
+      if(a2){var g2=e[1].g2||0;var d=g2>0?((e[1].g1-g2)/g2*100).toFixed(0):(e[1].g1>0?'NEW':'');var clr=g2===0?'#10b981':(parseFloat(d)>0?'#10b981':parseFloat(d)<0?'#ef4444':'#94a3b8');row+='<td>'+M(g2)+'</td><td style="color:'+clr+';">'+(d==='NEW'?'NEW':(parseFloat(d)>=0?'+':'')+d+'%')+'</td>';}
       return row+'</tr>';}).join('')+'</table>';}
   document.getElementById('decomp-ct').innerHTML=tb(a1,'内容类型',function(l){var c=l.content_id?CONTENTS.find(function(x){return x.id===l.content_id}):null;return c?c.content_type:'自然流量';});
   document.getElementById('decomp-cr').innerHTML=tb(a1,'创作者',function(l){var c=l.content_id?CONTENTS.find(function(x){return x.id===l.content_id}):null;return c?c.creator:'自然流量';});
