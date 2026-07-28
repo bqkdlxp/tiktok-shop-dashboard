@@ -118,7 +118,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Micr
   
   <div class="sec" id="decomp-sec">
     <div class="sec-hd">
-      <h2>🔍 GMV 拆解 — <span id="decomp-date"></span></h2>
+      <h2>🔍 GMV 拆解 — <input type="date" id="decomp-pick" style="padding:4px 8px;border:1px solid var(--b);border-radius:6px;font-size:12px;" onchange="decompDay(this.value)"> <span id="decomp-date"></span></h2>
       <button class="collapse-btn" onclick="toggleSec(this)">▼</button>
       
       <span style="font-size:11px;color:var(--m);margin-left:8px;">对比日期:</span>
@@ -456,7 +456,7 @@ function decompDay(dateStr){
   if(a1.length===0)return;
   var tg1=a1.reduce(function(s,l){return s+l.gmv;},0);
   var to1=a1.reduce(function(s,l){return s+l.orders;},0);
-  document.getElementById('decomp-sec').style.display='block';
+  document.getElementById('decomp-sec').style.display='block';document.getElementById('decomp-pick').value=_decompDate;
   document.getElementById('decomp-sec').scrollIntoView({behavior:'smooth'});
   // 对比日期
   var cmp=document.getElementById('decomp-compare').value;
