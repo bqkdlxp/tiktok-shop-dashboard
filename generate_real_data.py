@@ -21,7 +21,8 @@ generate_real_data.py — TikTok Shop 三大品类看板数据
 import json, random
 from datetime import datetime, timedelta
 
-random.seed(2026)
+import os
+random.seed(int(os.environ.get('RANDOM_SEED', '2026')))
 
 # ============================================================
 # 真实产品数据 (2026年7月)
