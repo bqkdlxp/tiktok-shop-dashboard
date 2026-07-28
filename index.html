@@ -450,7 +450,7 @@ function decompDay(dateStr){
     var bt={};fa.forEach(function(l){if(!bt[l.date])bt[l.date]={g:0};bt[l.date].g+=l.gmv;});
     var ds=Object.keys(bt).sort();if(ds.length===0)return;
     var avg=ds.reduce(function(s,d){return s+bt[d].g;},0)/ds.length;
-    _decompDate=ds.reduce(function(a,b){return Math.abs(bt[a].g-avg)>Math.abs(bt[b].g-avg)?a:b;},ds[0]);
+    if(!_decompDate)_decompDate=ds.reduce(function(a,b){return Math.abs(bt[a].g-avg)>Math.abs(bt[b].g-avg)?a:b;},ds[0]);
   }
   var a1=LINKAGES.filter(function(l){return l.date===_decompDate;});
   if(a1.length===0)return;
