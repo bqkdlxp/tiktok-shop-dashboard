@@ -439,6 +439,9 @@ window.switchCat=function(cat){S.f.cat=cat;S.f.sub='all';['toy','col','sta','all
 
 function init(){
   document.getElementById('tnow').textContent=new Date().toLocaleString();
+  var now=new Date(),today=now.toISOString().split('T')[0];
+  var ago=new Date(now.getTime()-30*86400000).toISOString().split('T')[0];
+  S.f.df=ago;S.f.dt=today;
   // 默认显示最近30天（截止今天）
   var now=new Date(), today=now.toISOString().split('T')[0];
   var ago=new Date(now.getTime()-30*86400000).toISOString().split('T')[0];
