@@ -268,7 +268,7 @@ function rFLT(){
   ['cat','sub','ct','camp','reg'].forEach(function(k){document.getElementById('f-'+k).onchange=function(){S.f[k]=this.value;if(k==='cat')S.f.sub='all';S.p=1;refresh();};});
   document.getElementById('f-df').onchange=function(){S.f.df=this.value;S.p=1;refresh();};
   document.getElementById('f-dt').onchange=function(){S.f.dt=this.value;S.p=1;refresh();};
-  document.getElementById('btn-rst').onclick=function(){var now=new Date(),today=now.toISOString().split('T')[0];var ago=new Date(now.getTime()-30*86400000).toISOString().split('T')[0];S.f={cat:'Toys',sub:'all',ct:'all',camp:'all',reg:'all',df:ago,dt:today};S.q='';document.getElementById('search').value='';S.p=1;refresh();};
+  document.getElementById('btn-rst').onclick=function(){var now=new Date(),today=now.toISOString().split('T')[0];var ago=new Date(now.getTime()-30*86400000).toISOString().split('T')[0];S.f={cat:'all',sub:'all',ct:'all',camp:'all',reg:'all',df:ago,dt:today};S.q='';document.getElementById('search').value='';S.p=1;refresh();};
 }
 
 // ============================================================
