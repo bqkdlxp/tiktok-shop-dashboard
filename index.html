@@ -120,7 +120,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Micr
     <div class="sec-hd">
       <h2>🔍 GMV 拆解 — <span id="decomp-date"></span></h2>
       <button class="collapse-btn" onclick="toggleSec(this)">▼</button>
-      <button class="btn" style="margin-left:8px;" onclick="document.getElementById('decomp-sec').style.display='none'">✕ 关闭</button>
+      <button class="btn" style="margin-left:8px;" onclick="document.getElementById('decomp-sec').style.display='none'">✕</button>
+      <span style="font-size:11px;color:var(--m);margin-left:8px;">对比日期:</span>
+      <input type="date" id="decomp-compare" style="padding:4px 8px;border:1px solid var(--b);border-radius:6px;font-size:12px;" onchange="decompDay()">
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;">
       <div><h3 style="font-size:12px;">按内容类型</h3><div id="decomp-ct" style="max-height:200px;overflow-y:auto;"></div></div>
@@ -135,19 +137,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Micr
   <div class="cbx" style="margin-bottom:14px;"><h3>📊 内容类型贡献 — 各形式 GMV 占比 <button class="collapse-btn" onclick="toggleSec(this)">▼</button></h3><div class="anno" id="an-st"></div><div class="cin" id="c-st"></div></div>
 
   <div class="cbx" style="margin-bottom:14px;"><h3>📂 子类目 GMV 分布 <button class="collapse-btn" onclick="toggleSec(this)">▼</button></h3><div class="anno" id="an-sc"></div><div class="cin" id="c-sc"></div></div>
-
-  
-  <div class="sec">
-    <div class="sec-hd">
-      <h2>🔗 流量来源</h2>
-      <button class="collapse-btn" onclick="toggleSec(this)">▼</button>
-    </div>
-    <div class="cr2">
-      <div class="cbx" style="box-shadow:none;padding:0;"><h3 style="font-size:12px;">GMV 来源分布</h3><div class="cin" id="c-src" style="height:280px;"></div></div>
-      <div class="cbx" style="box-shadow:none;padding:0;"><h3 style="font-size:12px;">来源明细</h3><div style="max-height:280px;overflow-y:auto;" id="src-tbl"></div></div>
-    </div>
-    <div class="anno" id="an-src" style="margin-top:4px;"></div>
-  </div>
 
   <div class="sec">
     <div class="sec-hd"><h2>🏆 Top 10 排行榜</h2><button class="collapse-btn" onclick="toggleSec(this)">▼</button></div>
@@ -414,20 +403,6 @@ function rTbl(){
 }
 
 // ============================================================
-
-function rSrc(){
-  var a=GF();if(a.length===0)return;
-  var bs={};a.forEach(function(l){var ct=CONTENTS.find(function(x){return x.id===l.content_id});var s=ct?ct.content_type+' (内容驱动)':TC(l.linkage_type||'未知');if(!bs[s])bs[s]={g:0,o:0};bs[s].g+=l.gmv;bs[s].o+=l.orders;});
-  var ss=Object.entries(bs).sort(function(a,b){return b[1].g-a[1].g;});
-  var c=echarts.init(document.getElementById('c-src'));CH.push(c);
-  c.setOption({tooltip:{trigger:'item',formatter:function(p){return p.name+'<br/>GMV: '+M(p.value)+' ('+p.percent+'%)';}},series:[{type:'pie',radius:['40%','70%'],data:ss.map(function(e){return{name:e[0],value:e[1].g};}),label:{fontSize:11,formatter:function(p){return p.name+'\n'+M(p.value);}}}]});
-  var tg=ss.reduce(function(s,e){return s+e[1].g;},0);
-  var cd=ss.filter(function(e){return e[0].indexOf('内容驱动')>=0;}).reduce(function(s,e){return s+e[1].g;},0);
-  an('src','内容驱动: <strong>'+(cd/Math.max(tg,1)*100).toFixed(0)+'%</strong> | 非内容渠道: '+((1-cd/Math.max(tg,1))*100).toFixed(0)+'% | 内容占比越高→内容电商属性越强');
-  var rows=ss.map(function(e){return'<tr><td>'+e[0]+'</td><td style="font-weight:600;">'+M(e[1])+'</td><td>'+(e[1]/Math.max(tg,1)*100).toFixed(1)+'%</td><td>'+F(e[1].o)+'</td></tr>';}).join('');
-  document.getElementById('src-tbl').innerHTML='<table class="rtbl" style="width:100%;"><thead><tr><th>来源</th><th>GMV</th><th>占比</th><th>订单</th></tr></thead><tbody>'+rows+'</tbody></table>';
-}
-
 // INSIGHTS
 // ============================================================
 function rIns(){
@@ -462,23 +437,45 @@ function rIns(){
 // ============================================================
 function refresh(){
   CH.forEach(function(c){try{c.dispose()}catch(e){}});CH=[];
-  rKPI();rFLT();rTrend();rSankey();rStack();rSubcat();rSrc();rRank();rTbl();rIns();
+  rKPI();rFLT();rTrend();rSankey();rStack();rSubcat();rRank();rTbl();rIns();decompDay();
 }
 
 
+var _decompDate=null;
 function decompDay(dateStr){
-  if(!dateStr)return;
-  var a=LINKAGES.filter(function(l){return l.date===dateStr;});
-  if(a.length===0){alert(dateStr+' 无数据');return;}
-  var tg=a.reduce(function(s,l){return s+l.gmv;},0),to=a.reduce(function(s,l){return s+l.orders;},0);
-  document.getElementById('decomp-date').textContent=dateStr+' | GMV: '+M(tg)+' | 订单: '+F(to);
+  if(dateStr)_decompDate=dateStr;
+  if(!_decompDate){
+    // 找所选范围内偏离均值最大的异常日
+    var fa=GF();if(fa.length===0)return;
+    var bt={};fa.forEach(function(l){if(!bt[l.date])bt[l.date]={g:0};bt[l.date].g+=l.gmv;});
+    var ds=Object.keys(bt).sort();if(ds.length===0)return;
+    var avg=ds.reduce(function(s,d){return s+bt[d].g;},0)/ds.length;
+    _decompDate=ds.reduce(function(a,b){return Math.abs(bt[a].g-avg)>Math.abs(bt[b].g-avg)?a:b;},ds[0]);
+  }
+  var a1=LINKAGES.filter(function(l){return l.date===_decompDate;});
+  if(a1.length===0)return;
+  var tg1=a1.reduce(function(s,l){return s+l.gmv;},0);
+  var to1=a1.reduce(function(s,l){return s+l.orders;},0);
   document.getElementById('decomp-sec').style.display='block';
   document.getElementById('decomp-sec').scrollIntoView({behavior:'smooth'});
-  function tb(kf,lb){var m={};a.forEach(function(l){var k=kf(l);if(!m[k])m[k]=0;m[k]+=l.gmv;});return"<table class=\"rtbl\" style=\"width:100%;\"><tr><th>"+lb+"</th><th>GMV</th><th>%</th></tr>"+Object.entries(m).sort(function(a,b){return b[1]-a[1];}).map(function(e){return"<tr><td>"+TC(e[0])+"</td><td style=\"font-weight:600;\">"+M(e[1])+"</td><td>"+(tg>0?(e[1]/tg*100).toFixed(1):'0')+"%</td></tr>";}).join("")+"</table>";}
-  document.getElementById('decomp-ct').innerHTML=tb(function(l){var c=l.content_id?CONTENTS.find(function(x){return x.id===l.content_id}):null;return c?c.content_type:'自然流量';},'内容类型');
-  document.getElementById('decomp-cr').innerHTML=tb(function(l){var c=l.content_id?CONTENTS.find(function(x){return x.id===l.content_id}):null;return c?c.creator:'自然流量';},'创作者');
-  document.getElementById('decomp-cp').innerHTML=tb(function(l){return l.campaign||'Organic';},'活动');
-  document.getElementById('decomp-pd').innerHTML=tb(function(l){var p=PRODUCTS.find(function(x){return x.id===l.product_id});return p?p.name:l.product_id;},'商品');
+  // 对比日期
+  var cmp=document.getElementById('decomp-compare').value;
+  var a2=cmp?LINKAGES.filter(function(l){return l.date===cmp;}):null;
+  var tg2=a2?a2.reduce(function(s,l){return s+l.gmv;},0):0;
+  var chg=tg2>0?' (对比'+cmp+': '+((tg1-tg2)/tg2*100).toFixed(1)+'%)':'';
+  document.getElementById('decomp-date').textContent=_decompDate+' | GMV: '+M(tg1)+' | 订单: '+F(to1)+chg;
+  function tb(arr,lb){var m={},tg=arr.reduce(function(s,l){return s+l.gmv;},0);arr.forEach(function(l){var k=arguments[2]?arguments[2](l):l.campaign;if(!m[k])m[k]={g1:0};m[k].g1+=l.gmv;});if(a2){a2.forEach(function(l){var k=arguments[2]?arguments[2](l):l.campaign;if(!m[k])m[k]={g1:0,g2:0};m[k].g2=(m[k].g2||0)+l.gmv;});}
+    var it=Object.entries(m).sort(function(a,b){return b[1].g1-a[1].g1;});
+    var hd='<tr><th>'+lb+'</th><th>GMV</th><th>%</th>';
+    if(a2)hd+='<th>对比GMV</th><th>变化</th>';
+    hd+='</tr>';
+    return'<table class="rtbl" style="width:100%;">'+hd+it.map(function(e){var row='<tr><td>'+TC(e[0])+'</td><td style="font-weight:600;">'+M(e[1].g1)+'</td><td>'+((e[1].g1/tg1*100).toFixed(1))+'%</td>';
+      if(a2){var g2=e[1].g2||0;var d=g2>0?((e[1].g1-g2)/g2*100).toFixed(1):'N/A';row+='<td>'+M(g2)+'</td><td style="color:'+(parseFloat(d)>0?'#10b981':'#ef4444')+';">'+(parseFloat(d)>=0?'+':'')+d+'%</td>';}
+      return row+'</tr>';}).join('')+'</table>';}
+  document.getElementById('decomp-ct').innerHTML=tb(a1,'内容类型',function(l){var c=l.content_id?CONTENTS.find(function(x){return x.id===l.content_id}):null;return c?c.content_type:'自然流量';});
+  document.getElementById('decomp-cr').innerHTML=tb(a1,'创作者',function(l){var c=l.content_id?CONTENTS.find(function(x){return x.id===l.content_id}):null;return c?c.creator:'自然流量';});
+  document.getElementById('decomp-cp').innerHTML=tb(a1,'活动',function(l){return l.campaign||'Organic';});
+  document.getElementById('decomp-pd').innerHTML=tb(a1,'商品',function(l){var p=PRODUCTS.find(function(x){return x.id===l.product_id});return p?p.name:l.product_id;});
 }
 
 function toggleSec(btn){var sec=btn.closest(".sec")||btn.closest(".cbx");if(!sec)return;var hidden=false,first=true;for(var i=0;i<sec.children.length;i++){var c=sec.children[i];if(c===btn.parentElement||c.classList.contains("sec-hd")||c===btn)continue;if(first){hidden=c.style.display==="none";first=false;}c.style.display=hidden?"":"none";}btn.textContent=hidden?"▼":"▶";}
