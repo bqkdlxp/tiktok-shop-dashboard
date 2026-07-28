@@ -281,9 +281,9 @@ function rTrend(){
   a.forEach(function(l){if(!by[l.date])by[l.date]={g:0,o:0};by[l.date].g+=l.gmv;by[l.date].o+=l.orders;});
   var ds=Object.keys(by).sort();
   var c=echarts.init(document.getElementById('c-t'));
-  c.setOption({tooltip:{trigger:'axis'},legend:{data:['GMV','订单量'],bottom:0},grid:{left:75,right:15,top:10,bottom:35},
+  c.setOption({tooltip:{trigger:'axis'},legend:{data:['GMV','订单量'],bottom:0},grid:{left:70,right:20,top:10,bottom:35},
     xAxis:{type:'category',data:ds,axisLabel:{fontSize:10,rotate:45,formatter:function(v){return v.slice(5)}}},
-    yAxis:[{type:'value',axisLabel:{fontSize:10,formatter:M}},{type:'value',axisLabel:{fontSize:10,formatter:F}}],
+    yAxis:[{type:'value',axisLabel:{fontSize:9,formatter:M}},{type:'value',axisLabel:{fontSize:10,formatter:F}}],
     series:[{name:'GMV',type:'line',data:ds.map(function(d){return by[d].g}),smooth:true,lineStyle:{color:'#6366f1',width:2},itemStyle:{color:'#6366f1'},symbol:'none'},
             {name:'订单量',type:'line',yAxisIndex:1,data:ds.map(function(d){return by[d].o}),smooth:true,lineStyle:{color:'#10b981',width:2},itemStyle:{color:'#10b981'},symbol:'none'}]});
   var tg=ds.reduce(function(s,d){return s+by[d].g},0);
@@ -312,7 +312,7 @@ function rStack(){
   var ds=Array.from(ad).sort();
   var cs=['#6366f1','#3b82f6','#10b981','#f59e0b','#ef4444','#8b5cf6','#ec4899','#14b8a6'];
   var c=echarts.init(document.getElementById('c-st'));
-  c.setOption({tooltip:{trigger:'axis',valueFormatter:function(v){return M(v);}},legend:{data:types.map(function(x){return T(x)}),bottom:0},grid:{left:75,right:15,top:10,bottom:35},xAxis:{type:'category',data:ds,axisLabel:{fontSize:10,rotate:45,formatter:function(v){return v.slice(5)}}},yAxis:{type:'value',axisLabel:{fontSize:10,formatter:M}},series:types.map(function(t,i){return{name:T(t),type:'bar',stack:'x',data:ds.map(function(d){return by[t][d]||0}),itemStyle:{color:cs[i]},emphasis:{focus:'series'}};})});
+  c.setOption({tooltip:{trigger:'axis',valueFormatter:function(v){return M(v);}},legend:{data:types.map(function(x){return T(x)}),bottom:0},grid:{left:70,right:20,top:10,bottom:35},xAxis:{type:'category',data:ds,axisLabel:{fontSize:10,rotate:45,formatter:function(v){return v.slice(5)}}},yAxis:{type:'value',axisLabel:{fontSize:9,formatter:M}},series:types.map(function(t,i){return{name:T(t),type:'bar',stack:'x',data:ds.map(function(d){return by[t][d]||0}),itemStyle:{color:cs[i]},emphasis:{focus:'series'}};})});
   var tot={};types.forEach(function(t){tot[t]=ds.reduce(function(s,d){return s+(by[t][d]||0)},0);});
   var top=types.reduce(function(a,b){return tot[a]>tot[b]?a:b},types[0]);
   var all=Object.values(tot).reduce(function(s,v){return s+v},0);
@@ -325,7 +325,7 @@ function rSubcat(){
   a.forEach(function(l){var p=PRODUCTS.find(function(x){return x.id===l.product_id});if(!p||!p.subcategory)return;if(!by[p.subcategory])by[p.subcategory]={g:0,o:0,u:new Set()};by[p.subcategory].g+=l.gmv;by[p.subcategory].o+=l.orders;by[p.subcategory].u.add(l.product_id);});
   var it=Object.entries(by).map(function(e){return{n:T(e[0]),g:e[1].g,o:e[1].o,sku:e[1].u.size};}).sort(function(a,b){return b.g-a.g;});
   var c=echarts.init(document.getElementById('c-sc'));
-  c.setOption({tooltip:{trigger:'axis',formatter:function(p){var x=it[it.length-1-p[0].dataIndex];return x.n+'<br/>GMV: '+M(x.g)+'<br/>订单: '+F(x.o)+'<br/>SKU: '+x.sku;}},grid:{left:160,right:20,top:10,bottom:25},xAxis:{type:'value',axisLabel:{fontSize:10,formatter:M}},yAxis:{type:'category',data:it.map(function(x){return x.n}).reverse(),axisLabel:{fontSize:11},inverse:true},series:[{type:'bar',data:it.map(function(x){return x.g}).reverse(),itemStyle:{color:function(p){var cs2=['#6366f1','#818cf8','#a5b4fc','#c7d2fe','#e0e7ff'];return cs2[Math.min(p.dataIndex,4)];}},label:{show:true,position:'right',fontSize:10,formatter:function(p){return M(p.value);}}}]});
+  c.setOption({tooltip:{trigger:'axis',formatter:function(p){var x=it[it.length-1-p[0].dataIndex];return x.n+'<br/>GMV: '+M(x.g)+'<br/>订单: '+F(x.o)+'<br/>SKU: '+x.sku;}},grid:{left:160,right:20,top:10,bottom:25},xAxis:{type:'value',axisLabel:{fontSize:9,formatter:M}},yAxis:{type:'category',data:it.map(function(x){return x.n}).reverse(),axisLabel:{fontSize:11},inverse:true},series:[{type:'bar',data:it.map(function(x){return x.g}).reverse(),itemStyle:{color:function(p){var cs2=['#6366f1','#818cf8','#a5b4fc','#c7d2fe','#e0e7ff'];return cs2[Math.min(p.dataIndex,4)];}},label:{show:true,position:'right',fontSize:10,formatter:function(p){return M(p.value);}}}]});
   var t3=it.slice(0,3).reduce(function(s,x){return s+x.g},0),ag=it.reduce(function(s,x){return s+x.g},0);
   an('sc','Top3子类目贡献'+(ag>0?(t3/ag*100).toFixed(0):0)+'% GMV | '+it.length+'个子类目有动销');
   CH.push(c);
