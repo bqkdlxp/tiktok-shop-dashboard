@@ -475,8 +475,8 @@ function decompDay(dateStr){
   document.getElementById('decomp-sec').style.display='block';
   document.getElementById('decomp-sec').scrollIntoView({behavior:'smooth'});
   function tb(kf,lb){var m={};a.forEach(function(l){var k=kf(l);if(!m[k])m[k]=0;m[k]+=l.gmv;});return"<table class=\"rtbl\" style=\"width:100%;\"><tr><th>"+lb+"</th><th>GMV</th><th>%</th></tr>"+Object.entries(m).sort(function(a,b){return b[1]-a[1];}).map(function(e){return"<tr><td>"+TC(e[0])+"</td><td style=\"font-weight:600;\">"+M(e[1])+"</td><td>"+(tg>0?(e[1]/tg*100).toFixed(1):'0')+"%</td></tr>";}).join("")+"</table>";}
-  document.getElementById('decomp-ct').innerHTML=tb(function(l){var c=l.content_id?CONTENTS.find(function(x){return x.id===l.content_id}):null;return c?c.content_type:'自然流量';},'内容类型');
-  document.getElementById('decomp-cr').innerHTML=tb(function(l){var c=l.content_id?CONTENTS.find(function(x){return x.id===l.content_id}):null;return c?c.creator:'自然流量';},'创作者');
+  document.getElementById('decomp-ct').innerHTML=tb(function(l){var c=l.content_id?CONTENTS.find(function(x){return x.id===l.content_id}):null;return c?c.content_type:'非内容驱动';},'内容类型');
+  document.getElementById('decomp-cr').innerHTML=tb(function(l){var c=l.content_id?CONTENTS.find(function(x){return x.id===l.content_id}):null;return c?c.creator:'非内容驱动';},'创作者');
   document.getElementById('decomp-cp').innerHTML=tb(function(l){return l.campaign||'Organic';},'活动');
   document.getElementById('decomp-pd').innerHTML=tb(function(l){var p=PRODUCTS.find(function(x){return x.id===l.product_id});return p?p.name:l.product_id;},'商品');
 }
