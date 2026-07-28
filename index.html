@@ -479,7 +479,7 @@ function decompDay(dateStr){
   }catch(e){document.getElementById('decomp-date').textContent+=' | 错误: '+e.message+'';}  function tb(arr,lb,kf){var m={},tg=arr.reduce(function(s,l){return s+l.gmv;},0);arr.forEach(function(l){var k=kf?kf(l):l.campaign;if(!m[k])m[k]={g1:0};m[k].g1+=l.gmv;});if(a2){a2.forEach(function(l){var k=kf?kf(l):l.campaign;if(!m[k])m[k]={g1:0,g2:0};m[k].g2=(m[k].g2||0)+l.gmv;});}
     var it=Object.entries(m).sort(function(a,b){return b[1].g1-a[1].g1;});
     var hd='<tr><th>'+lb+'</th><th>GMV</th><th>%</th>';
-    if(a2)hd+='<th>对比GMV</th><th>变化</th>';
+    if(a2)hd+='<th>对比</th><th>±</th>';
     hd+='</tr>';
     return'<table class="rtbl" style="width:100%;">'+hd+it.map(function(e){var row='<tr><td>'+TC(e[0])+'</td><td style="font-weight:600;">'+M(e[1].g1)+'</td><td>'+((e[1].g1/tg1*100).toFixed(1))+'%</td>';
       if(a2){var g2=e[1].g2||0;var d=g2>0?((e[1].g1-g2)/g2*100).toFixed(1):'N/A';row+='<td>'+M(g2)+'</td><td style="color:'+(parseFloat(d)>0?'#10b981':'#ef4444')+';">'+(parseFloat(d)>=0?'+':'')+d+'%</td>';}
